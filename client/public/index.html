@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="theme-color" content="#000000" />
+  <meta name="description" content="Web site created using create-react-app" />
+  <link rel="apple-touch-icon" href="%PUBLIC_URL%/logo192.png" />
+
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/hover.css/2.3.1/css/hover-min.css">
+
+  <title>React App</title>
+  <style>
+    body {
+      background-color: #e0f7fa;
+
+    }
+
+    Card:hover {
+      background-color: pink;
+    }
+
+    .product-div:hover {
+      border: 10px solid red;
+    }
+
+    .div-1 {
+      background-color: #fbf9f9;
+    }
+
+
+    .addtocart:hover {
+      background-color: red;
+    }
+
+    .dropdown-categ:hover{
+      background-color: #CDE8E5;
+      color: #CDE8E5;
+      font-weight: bold;
+    }
+
+    .navbar {
+      padding: 0px;
+      margin: 0px;
+      box-shadow: 1px 2px 9px #aaf4e5;
+      background-color: #CDE8E5;
+      color: white;
+      display: flex;
+      flex-wrap: nowrap;
+      height: 70px;
+      width: 100%;
+    }
+
+    input[type='text']:focus {
+      outline: none;
+    }
+
+    input::placeholder {
+      color: #EEF7FF;
+      opacity: 1;
+    }
+
+    .card:hover {
+      cursor: pointer;
+    }
+
+    input.submit-btn:hover {
+     background-color: white;
+     color:#7AB2B2 ;
+    }
+
+    
+    input.submit-btn{
+      background-color: #7AB2B2;
+      color: whitesmoke;
+      height: 40px;
+      font-weight: bold;
+      font-size:20px;
+    }
+
+
+    .swal2-popup {
+      background-color: #e0e6e6;
+      border-radius: 10px;
+      border: 2px solid #ffffff ;
+      color: #7AB2B2;
+    }
+
+    .product-name:hover {
+      color: red;
+      text-decoration: underline;
+    }
+
+    .nav-category {
+      font-size: 20px;
+      font-weight: bold;
+    }
+
+    tr:hover {
+      background-color: #CDE8E5;
+      color: black;
+      border: 1px solid yellow;
+    }
+
+    .nav-category:hover {
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      background-color:#CDE8E5 ;
+      color: black;
+      text-underline-offset: 10px;
+    }
+    .selected-category {
+      font-size: 20px;
+      font-weight: bold;
+      cursor: pointer;
+      background-color:#CDE8E5 ;
+      color: black;
+      text-underline-offset: 10px;
+    }
+
+    .nav-category {
+      padding: 10px;
+
+    }
+
+
+
+    /* styles.css */
+    li {
+      background-color: #7AB2B2;
+      /* Default background color for li */
+    }
+
+    li a {
+      color: white;
+      /* Default text color for anchor */
+      text-decoration: none;
+      display: block;
+    }
+
+    li:hover {
+      background-color: white;
+    }
+
+    li:hover a {
+      color: #7AB2B2;
+      text-decoration: none;
+    }
+
+
+
+
+    .nav-item:hover {
+      text-decoration: underline;
+    }
+
+    .card-img:hover {
+      transform: scale(1.02);
+      transition: transform 0.7s ease;
+    }
+
+    /* Ensure the container is centered and has a pleasant color combination */
+    .container {
+      background-color: #e0f7fa;
+      /* Light cyan background */
+
+      border-radius: 10px;
+      box-shadow: 1px 2px 9px #aaf4e5;
+      max-width: 50%;
+      /* Limit the maximum width */
+      height: 60%;
+      display: flex;
+      justify-content: center;
+    }
+
+    /* Layout settings for the image grid */
+    .image-grid {
+      display: flex;
+      justify-content: space-between;
+      gap: 20px;
+      /* Gap between the left and right images */
+      max-width: 50%;
+      /* Limit the maximum width */
+      height: 60%;
+    }
+
+    /* Settings for the left image */
+    .image-left,
+    .image-right {
+      flex: 1;
+      padding: 10px;
+      cursor: pointer;
+    }
+
+    .image-left {
+      padding-top: 30px;
+    }
+
+    /* Settings for the right images to stack vertically */
+    .image-right {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 20px;
+      /* Gap between the top and bottom images */
+    }
+
+    /* General image settings with transition effects */
+    .image {
+      width: 100%;
+      height: auto;
+      transition: transform 0.3s ease-in-out, box-shadow 0.3s ease;
+      border-radius: 10px;
+      margin: 10px 0;
+      background-color: #bdd1d3;
+      /* White background for image container */
+      padding: 10px;
+      box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Hover effect for images */
+    .image:hover {
+      transform: scale(1.1);
+      box-shadow: 0px 4px 15px rgba(0, 0, 0, 0.2);
+    }
+
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .fade-in {
+      animation: fadeIn 1s ease-in-out;
+    }
+
+    .spinner-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      /* Full viewport height */
+    }
+
+    .spinner {
+      border: 8px solid #f3f3f3;
+      /* Light grey */
+      border-top: 8px solid #3498db;
+      /* Blue */
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 2s linear infinite;
+    }
+
+    @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    .img-product:hover {
+      transform: rotate(30deg);
+      transition: all 0.9s cubic-bezier(0.25, 0.1, 0.25, 1);
+    }
+
+    .img-product {
+      height: 400px;
+      width: 400px;
+      cursor: pointer;
+
+    }
+
+    .add-to-cart {
+      color: #EEF7FF;
+      height: 50px;
+      width: 150px;
+      border: 1px solid white;
+      width: 100%;
+      display: none;
+      background-color: #7AB2B2;
+    }
+
+    .add-to-cart:hover {
+      background-color: black;
+      color: white;
+      height: 50px;
+      width: 100%;
+      border: 1px solid white;
+      transition: all 0.4s ease-in-out;
+      box-shadow: 1px 2px 3px 3px greenyellow;
+
+    }
+
+
+.size-shoe{
+  color: black;
+  background-color: white;
+  border: 1px solid rgb(174, 172, 172);
+  cursor: pointer;
+  height: 35px;
+  width: 40px;
+}
+
+.size-shoe:hover{
+  color: white;
+  background-color: #7AB2B2;
+}
+
+
+.size.selected {
+  background-color: #7AB2B2;
+  color: white;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
+  </style>
+  <!-- Bootstrap 5 CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+</head>
+
+<body style="font-size: 20px;">
+  <noscript>You need to enable JavaScript to run this app.</noscript>
+  <div id="root"></div>
+
+  <!-- Bootstrap JavaScript dependencies -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.12.9/dist/umd/popper.min.js"
+    integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+    crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+    crossorigin="anonymous"></script>
+</body>
+
+</html>

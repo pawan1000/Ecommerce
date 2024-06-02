@@ -1,0 +1,24 @@
+# Node.js dependencies
+/node_modules
+
+# Dependency directories
+/.pnp/
+.pnp.js
+
+# Debugging files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Environment variables
+.env
+.env.test
+.env.prod
+
+# Editor files
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
