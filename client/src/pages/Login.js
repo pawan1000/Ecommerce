@@ -3,7 +3,9 @@ import axios from 'axios'
 import {useNavigate} from 'react-router-dom'
 import { AuthContext } from '../helpers/AuthContext'
 import Swal from 'sweetalert2'
+import TestComponent from './testComponent'
 const Login = () => {
+  const apiUrl=process.env.REACT_APP_API_URL;
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
   const {authState, setAuthState}=useContext(AuthContext);
@@ -28,14 +30,13 @@ const Login = () => {
       username:username,
       password:password
     };
-    axios.post('http://localhost:4000/users/login',data).then(
+    axios.post(`${apiUrl}/users/login`,data).then(
       (res)=>{
         if(res.data.message)
         {
-          console.log(res.data);
+          
           sessionStorage.setItem('accessToken',res.data.accessToken);
           setAuthState({userType:res.data.userType,status:true,username:res.data.username,user_id:res.data.user_id});
-          console.log(res.data.userType);
           showAlert('You Logged in Succesfulyy','success');
           return 'home'
         }

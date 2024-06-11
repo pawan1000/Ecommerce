@@ -1,3 +1,4 @@
+require('dotenv').config();
 const {verify}=require('jsonwebtoken');
 const validateToken=(req,res,next)=>{
     const accessToken=req.header('accessToken');
@@ -5,7 +6,7 @@ const validateToken=(req,res,next)=>{
         return res.json({error:'user not logged in'});
     }
     try{
-        const validToken=verify(accessToken,'importantsecretkey');
+        const validToken=verify(accessToken,process.env.SECRET_KEY);
         req.user=validToken;
         if(validToken)
         {

@@ -8,6 +8,7 @@ import ProductCard from "../helpers/ProductCard";
 import Swal from "sweetalert2";
 import HomeNav from "../helpers/HomeNav";
 function Categories() {
+    const apiUrl=process.env.REACT_APP_API_URL;
     const [category, setCategory] = useState([]);
     const { name } = useParams();
     const [categoryCount,setCategoryCount]=useState(0);
@@ -42,12 +43,12 @@ function Categories() {
             console.log(name)
             if (name == 'men' || name == 'women' || name == 'summer-collection' || name == 'flat-40-off') 
             {
-                axios.get(`http://localhost:4000/product/filter/${name}?page=${page}`).then(
+                axios.get(`${apiUrl}/product/filter/${name}?page=${page}`).then(
                     (res) => {setCategory(res.data.rows);setCategoryCount(res.data.total)}
                 )
             }
             else {
-                axios.get(`http://localhost:4000/categories/${name}?page=${page}`).then(
+                axios.get(`${apiUrl}/categories/${name}?page=${page}`).then(
                     (res) => {
                         setCategory(res.data.rows);setCategoryCount(res.data.total); console.log(res);
                     }

@@ -6,6 +6,7 @@ import Swal from 'sweetalert2';
 
 const Register = () => {
   const users = [];
+  const apiUrl=process.env.REACT_APP_API_URL;
   const [usernameExists, setUsernameExists] = useState(false);
   const [username, setUsername] = useState();
   const [password, setPassword] = useState();
@@ -29,13 +30,13 @@ const Register = () => {
 
 
   useEffect(() => {
-    axios.get('http://localhost:4000/categories/showcategories').then(
+    axios.get(`${apiUrl}/categories/showcategories`).then(
       (res) => setCategories(res.data)
     )
   }, []);
 
   useEffect(() => {
-    axios.get(' http://localhost:4000/users').then(
+    axios.get(`${apiUrl}/users`).then(
       (res) => {
         res.data.forEach((element) => {
           users.push(element.username)

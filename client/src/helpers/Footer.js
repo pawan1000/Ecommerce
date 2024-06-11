@@ -14,19 +14,19 @@ const Footer = (items) => {
           <div className="col-md-4">
             <h5>Useful Links</h5>
             <ul className="list-unstyled ">
-              <li style={{ backgroundColor: '#CDE8E5', cursor: 'pointer' }}><a className='text-dark' onClick={() => navigate('/')} style={{ textDecoration: 'none' }}>Home</a></li>
-              <li style={{ backgroundColor: '#CDE8E5', cursor: 'pointer' }}><a className='text-dark' onClick={() => { document.getElementById('searchDiv').focus(); document.getElementById('searchDiv').click() }} style={{ textDecoration: 'none' }}>Search</a></li>
-              <li style={{ backgroundColor: '#CDE8E5', cursor: 'pointer' }}><a className='text-dark' onClick={() => navigate('categories/sandals')} style={{ textDecoration: 'none' }}>Sandals</a></li>
-              <li style={{ backgroundColor: '#CDE8E5', cursor: 'pointer' }}><a className='text-dark' onClick={() => navigate('categories/flat-40-off')} style={{ textDecoration: 'none' }}>Sale</a></li>
+              <li style={{ backgroundColor: '#CDE8E5', cursor: 'pointer' }}><a className='footer-text-link' onClick={() => navigate('/')} style={{ textDecoration: 'none' }}>Home</a></li>
+              <li style={{ backgroundColor: '#CDE8E5', cursor: 'pointer' }}><a className='footer-text-link' onClick={() => { document.getElementById('searchDiv').focus(); document.getElementById('searchDiv').click() }} style={{ textDecoration: 'none' }}>Search</a></li>
+              <li style={{ backgroundColor: '#CDE8E5', cursor: 'pointer' }}><a className='footer-text-link' onClick={() => navigate('categories/sandals')} style={{ textDecoration: 'none' }}>Sandals</a></li>
+              <li style={{ backgroundColor: '#CDE8E5', cursor: 'pointer' }}><a className='footer-text-link' onClick={() => navigate('categories/flat-40-off')} style={{ textDecoration: 'none' }}>Sale</a></li>
             </ul>
           </div>
           <div className="col-md-4">
             <h5>Trending</h5>
             <ul className="list-unstyled" >
-              <li style={{ backgroundColor: '#CDE8E5', cursor: 'pointer' }}><a className='text-dark' onClick={() => navigate('/categories/sneakers')} style={{ textDecoration: 'none' }}>Sneakers</a></li>
-              <li style={{ backgroundColor: '#CDE8E5', cursor: 'pointer' }}><a className='text-dark' onClick={() => navigate('/categories/boots')} style={{ textDecoration: 'none' }}>Boots</a></li>
-              <li style={{ backgroundColor: '#CDE8E5', cursor: 'pointer' }}><a className='text-dark' onClick={() => navigate('/categories/casual')} style={{ textDecoration: 'none' }}>Casual</a></li>
-              <li style={{ backgroundColor: '#CDE8E5', cursor: 'pointer' }}><a className='text-dark' onClick={() => navigate('/categories/partyware')} style={{ textDecoration: 'none' }}>Partyware</a></li>
+              <li style={{ backgroundColor: '#CDE8E5', cursor: 'pointer' }}><a className='footer-text-link'  onClick={() => navigate('/categories/sneakers')} >Sneakers</a></li>
+              <li style={{ backgroundColor: '#CDE8E5', cursor: 'pointer' }}><a className='footer-text-link'  onClick={() => navigate('/categories/boots')} >Boots</a></li>
+              <li style={{ backgroundColor: '#CDE8E5', cursor: 'pointer' }}><a className='footer-text-link' onClick={() => navigate('/categories/casual')} >Casual</a></li>
+              <li style={{ backgroundColor: '#CDE8E5', cursor: 'pointer' }}><a className='footer-text-link' onClick={() => navigate('/categories/partyware')} >Partyware</a></li>
             </ul>
           </div>
           <div className="col-md-4 text-md-right">

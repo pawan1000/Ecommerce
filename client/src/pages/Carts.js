@@ -6,7 +6,8 @@ import Swal from 'sweetalert2'
 import { FaAnglesRight } from "react-icons/fa6";
 import Footer from "../helpers/Footer";
 import { useNavigate } from "react-router-dom";
-function Carts() {
+function Carts() {  
+    const apiUrl=process.env.REACT_APP_API_URL;
     const [items, setItems] = useState([]);
     const [categories, setCategories] = useState([]);
     const [price, setPrice] = useState();
@@ -43,7 +44,7 @@ const navigate=useNavigate();
         }).then(
             (result) => {
                 if (result.isConfirmed) {
-                    axios.delete(`http://localhost:4000/carts/delete/${id}`, { headers: { accessToken: sessionStorage.getItem('accessToken') } }).then(
+                    axios.delete(`${apiUrl}/carts/delete/${id}`, { headers: { accessToken: sessionStorage.getItem('accessToken') } }).then(
                         (res) => {
                             if (res.data.error) {
                                 alert('user not logged in');
@@ -80,7 +81,7 @@ const navigate=useNavigate();
 
         }).then(
             () => {
-                axios.put(`http://localhost:4000/carts/update/${product.id}`, { headers: { accessToken: sessionStorage.getItem('accessToken') } }).then(
+                axios.put(`${apiUrl}/carts/update/${product.id}`, { headers: { accessToken: sessionStorage.getItem('accessToken') } }).then(
                     (res) => {
                         if (res.data.error) {
                             alert('user not logged in');
@@ -104,13 +105,13 @@ const navigate=useNavigate();
     }
 
     useEffect(() => {
-        axios.get(`http://localhost:4000/carts/?user_id=${authState.user_id}`).then(
+        axios.get(`${apiUrl}/carts/?user_id=${authState.user_id}`).then(
             (res) => { setItems(res.data); console.log(res.data); }
         )
     }, [authState])
 
     useEffect(() => {
-        axios.get('http://localhost:4000/carts/categories').then(
+        axios.get(`${apiUrl}/carts/categories`).then(
             (res) => setCategories(res.data)
         )
     }, [])

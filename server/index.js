@@ -3,6 +3,7 @@ const app=express();
 app.use(express.json());
 const cors=require('cors');
 app.use(cors());
+require('dotenv').config();
 
 
 const categoriesRouter=require('./routes/categories');
@@ -17,6 +18,6 @@ app.use('/users',usersRouter);
 app.use('/uploads', express.static('uploads'));
 
 
-app.listen(4000,()=>{
+app.listen(process.env.PORT,()=>{
 console.log('server running on port 4000..');
 })

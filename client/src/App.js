@@ -8,7 +8,6 @@ import Login from '../src/pages/Login';
 import Product from './pages/Product';
 import Carts from '../src/pages/Carts';
 import { AuthContext } from './helpers/AuthContext';
-import SellerLogin from './pages/SellerLogin';
 import Dashboard from './pages/Dashboard';
 import Categories from './pages/Categories';
 import LoadingSpinner from './helpers/LoadingSpinner';
@@ -198,7 +197,7 @@ function App() {
                   )}
                 </div>
                 <div className='col-sm-1 justify-content-right nav-item'>
-                  <NavLink to='/Login' onClick={(e) => { document.getElementById('dropdownDiv').style.display = 'none' }} style={{ color: 'yellow', fontFamily: 'Arial', fontSize: '25px', textDecoration: 'none' }}><button className='btn' style={{ color: '#EEF7FF', width: '100px', fontWeight: 'bold', backgroundColor: '#7AB2B2', border: "1px solid white", borderRadius: '20px', boxShadow: '1px 2px 9px #aaf4e5' }}>LOGIN</button></NavLink>
+                  <NavLink to='/Login' onClick={(e) => { document.getElementById('dropdownDiv').style.display = 'none' }} style={{ color: 'yellow',  fontSize: '25px', textDecoration: 'none' }}><button className='btn' style={{ color: 'white', width: '100px', fontWeight: 'bold', backgroundColor: '#7AB2B2', border: "1px solid white", borderRadius: '30px', boxShadow: '1px 2px 9px #aaf4e5' }}>LOGIN</button></NavLink>
                 </div>
               </>
             ) : (

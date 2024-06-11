@@ -10,6 +10,7 @@ import sneaker_form from '../assets/sneaker_form.png';
 import Swal from "sweetalert2";
 import Cards from "../helpers/Cards";
 function Dashboard() {
+    const apiUrl=process.env.REACT_APP_API_URL;
     const navigate = useNavigate();
     const { authState, setAuthState } = useContext(AuthContext);
     const [categories, setCategories] = useState([]);
@@ -31,7 +32,7 @@ function Dashboard() {
     })
 
     useEffect(() => {
-        axios.get(`http://localhost:4000/carts/insights/${authState.user_id}`).then(
+        axios.get(`${apiUrl}/carts/insights/${authState.user_id}`).then(
             res => {
                 console.log(res);
                 setInsights(res.data);
@@ -41,7 +42,7 @@ function Dashboard() {
     }, [authState, UpdateTable])
 
     useEffect(() => {
-        axios.get('http://localhost:4000/categories/showCategories').then(
+        axios.get(`${apiUrl}/categories/showCategories`).then(
             (res) => setCategories(res.data)
         )
     }, [UpdateTable])
@@ -57,7 +58,7 @@ function Dashboard() {
         }).then(
             (result) => {
                 if (result.isConfirmed) {
-                    axios.delete(`http://localhost:4000/product/delete/${id}`, { headers: { accessToken: sessionStorage.getItem('accessToken') } }).then(
+                    axios.delete(`${apiUrl}/product/delete/${id}`, { headers: { accessToken: sessionStorage.getItem('accessToken') } }).then(
                         (res) => {
                             if (res.data.error) {
                                 alert('user not logged in');
@@ -92,7 +93,7 @@ function Dashboard() {
             }
         });
         if (isConfirmed) {
-            axios.put(`http://localhost:4000/product/${id}`, { field: field, value: newPrice }).then((res) => {
+            axios.put(`${apiUrl}/product/${id}`, { field: field, value: newPrice }).then((res) => {
                 setUpdateTable(true);
                 console.log('updatded')
                 console.log(res.data);
@@ -113,7 +114,7 @@ function Dashboard() {
 
         formData.append('seller_id', authState.user_id)
 
-        axios.post('http://localhost:4000/product/addProduct', formData).then((res) => {
+        axios.post(`${apiUrl}/product/addProduct`, formData).then((res) => {
             console.log(res)
             if (res.data) {
                 alert('Product added Succesfully');

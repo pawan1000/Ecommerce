@@ -9,6 +9,7 @@ import ProductCard from '../helpers/ProductCard';
 import Footer from '../helpers/Footer';
 
 const Product = () => {
+  const apiUrl=process.env.REACT_APP_API_URL;
   const params = useParams();
   const id = params.id;
   const [product, setProduct] = useState([]);
@@ -17,11 +18,11 @@ const Product = () => {
   let navigate = useNavigate();
   const { authState, setAuthState, cartCount, setCartCount } = useContext(AuthContext)
   useEffect(() => {
-    axios.get(`http://localhost:4000/product/${id}`).then(
+    axios.get(`${apiUrl}/product/${id}`).then(
       (res) => { setProduct(res.data); console.log(res.data); return res.data[0].category_id; }
     ).then(
       (categoryId) => {
-        axios.get(`http://localhost:4000/categories/id/${categoryId}`).then(
+        axios.get(`${apiUrl}/categories/id/${categoryId}`).then(
           (res) => {
             setCategory(res.data); console.log(res); console.log('in product page in category');
           }
@@ -44,7 +45,7 @@ const Product = () => {
     item.user_id = authState.user_id;
     console.log('in products addToCart function' + item);
     item = { ...item, size: size };
-    axios.post('http://localhost:4000/carts/addToCart', item, { headers: { 'accessToken': sessionStorage.getItem('accessToken') } }).then(
+    axios.post(`${apiUrl}/carts/addToCart`, item, { headers: { 'accessToken': sessionStorage.getItem('accessToken') } }).then(
       (res) => {
         console.log(res);
         if (res.data.error) {

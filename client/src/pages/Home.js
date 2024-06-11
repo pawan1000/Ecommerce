@@ -20,6 +20,8 @@ import { FaArrowsRotate } from "react-icons/fa6";
 import { AuthContext } from '../helpers/AuthContext'
 import HomeNav from '../helpers/HomeNav'
 const Home = () => {
+
+  const apiUrl=process.env.REACT_APP_API_URL;
   const [sneakers, setSneakers] = useState([]);
   const [sports, setSports] = useState([]);
   const navigate = useNavigate();
@@ -35,12 +37,12 @@ const Home = () => {
   }
 
   useEffect(() => {
-    axios.get('http://localhost:4000/categories/sneakers').then(
+    axios.get(`${apiUrl}/categories/sneakers`).then(
       (res) => { setSneakers(res.data.rows) }
     )
   }, [])
   useEffect(() => {
-    axios.get('http://localhost:4000/categories/sport').then(
+    axios.get(`${apiUrl}/categories/sport`).then(
       (res) => { setSports(res.data.rows) }
     )
   }, [])
