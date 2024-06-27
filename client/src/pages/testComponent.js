@@ -17,39 +17,19 @@ import React, { useEffect, useState } from 'react'
 // }
 
 const TestComponent = () => {
-    // const [inputValue,setInputValue]=useState('');
-    // const debouncedText=useDebounce(inputValue,2000)
-    const [reverse,setReverse]=useState(true)
 
-    const [number, setNumber] = useState('');
-
-    function handleChange(e) {
-        const digit = e.target.value;
-        setNumber(digit);
-        e.target.style.color = 'red';
-        if (digit.length == 3) {
-            const newInput = "(" + digit + ")"
-            document.getElementById('inputBox').value = newInput
-        }
-        if (digit.length == 8) {
-            const newInput = digit + '-'
-            document.getElementById('inputBox').value = newInput
-        }
-        if (digit.length == 13) {
-            const newInput = digit.slice(0, digit.length - 1);
-            document.getElementById('inputBox').value = newInput
-        }
-
+    const [digit,setDigit]=useState(0);
+    const [char,setChar]=useState('a');
+    function handleDigit()
+    {
+        setDigit(digit+1);
+        setDigit(5);
+        setChar('b');
     }
 
     return (
         <div>
-            {/* <input type='text' onChange={(e)=>setInputValue(e.target.value)}></input>
-    <h1>{debouncedText}</h1> */}
-
-            <input type='' id='inputBox' onChange={(e) => handleChange(e)} ></input>
-            {number}
-
+         <button onClick={handleDigit}>{digit} {char}</button>
         </div>
     )
 }

@@ -9,7 +9,7 @@ const Footer = (items) => {
         <div className="row">
           <div className="col-md-4">
             <h5>About Us</h5>
-            <p><strong>The Joota Store </strong>is dedicated to crafting comfortable and stylish footwear for every occasion. With a focus on quality materials and expert craftsmanship, we create shoes that support your every step with confidence and style.</p>
+            <p style={{color:'rgb(116, 110, 110)'}}><strong>The Joota Store </strong>is dedicated to crafting comfortable and stylish footwear for every occasion. With a focus on quality materials and expert craftsmanship, we create shoes that support your every step with confidence and style.</p>
           </div>
           <div className="col-md-4">
             <h5>Useful Links</h5>

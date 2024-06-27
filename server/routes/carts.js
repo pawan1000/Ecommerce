@@ -65,14 +65,15 @@ router.get('/categories', (req, res) => {
 router.get('/insights/:id', async (req, res) => {
     try {
         const seller_id = req.params.id;
+        let month=req.query.month;
         const data = {};
 
         const query1 = 'select count(*) as total_purchase from carts inner join products on carts.product_id = products.id where carts.status = "purchased" and products.seller_id = ? ';
         const totalPurchaseResult = await executeQuery(query1, [seller_id]);
         data.total_purchase = totalPurchaseResult[0].total_purchase;
 
-        const query2 = 'select avg(price) as avg_price from products where seller_id=?';
-        const avgPriceResult = await executeQuery(query2, [seller_id]);
+        const query2 = 'select avg(price) as avg_price from products where seller_id=? and month(created_date)=?';
+        const avgPriceResult = await executeQuery(query2, [seller_id,month]);
         data.avg_price = avgPriceResult[0].avg_price || 0;
 
         const query3 = 'select count(*) as total_return from carts inner join products on carts.product_id = products.id where carts.status = "returned" and products.seller_id = ?';
@@ -87,8 +88,8 @@ router.get('/insights/:id', async (req, res) => {
             data.top_selling_product = 'No sales yet';
         }
 
-        const query5='select *  from products where seller_id=?';
-        const totalProducts=await executeQuery(query5,[seller_id]);
+        const query5='select *  from products where seller_id=? and month(created_date)=? ';
+        const totalProducts=await executeQuery(query5,[seller_id,month]);
         data.total_products = totalProducts.length ? totalProducts : [];
 
         res.json(data);
@@ -109,6 +110,22 @@ function executeQuery(query, params) {
         });
     });
 }
+
+router.get('/fool',(req,res)=>{
+  
+    const query='select count(*) as count, month(created_date) as `Month` from products group by month(created_date)';
+    connection.query(query,(err,result)=>{
+      if(err)
+        res.json(err)
+      else
+      {
+        console.log('hello');
+        console.log(result);
+        res.json(result)
+        
+      }
+    })
+})
 
 
 module.exports = router;

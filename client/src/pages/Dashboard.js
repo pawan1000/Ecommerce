@@ -9,8 +9,9 @@ import { NavLink, Navigate, useNavigate } from "react-router-dom";
 import sneaker_form from '../assets/sneaker_form.png';
 import Swal from "sweetalert2";
 import Cards from "../helpers/Cards";
+import PieChart from "../helpers/PieChart";
 function Dashboard() {
-    const apiUrl=process.env.REACT_APP_API_URL;
+    const apiUrl = process.env.REACT_APP_API_URL;
     const navigate = useNavigate();
     const { authState, setAuthState } = useContext(AuthContext);
     const [categories, setCategories] = useState([]);
@@ -23,7 +24,9 @@ function Dashboard() {
     const [description, setDescription] = useState('');
     const [rating, setRating] = useState(1);
     const [UpdateTable, setUpdateTable] = useState(false);
-
+    const [currentMonth, setCurrentMonth] = useState(1);
+    const [productsPerMonth,setProductsPerMonth]=useState([]);
+    const [productsByCategory,setProductByCategory]=useState([]);
     useEffect(() => {
         if (authState.userType !== 'seller') {
             navigate('/');
@@ -32,20 +35,34 @@ function Dashboard() {
     })
 
     useEffect(() => {
-        axios.get(`${apiUrl}/carts/insights/${authState.user_id}`).then(
+        axios.get(`${apiUrl}/carts/insights/${authState.user_id}?month=${currentMonth}`).then(
             res => {
                 console.log(res);
                 setInsights(res.data);
-                // document.getElementById('table-products').style.display = 'none';
             }
         )
-    }, [authState, UpdateTable])
+    }, [authState, UpdateTable, currentMonth])
 
+    useEffect(()=>{
+        axios.get(`${apiUrl}/product/insights/monthwise`).then((res)=>{
+            setProductsPerMonth(res.data)
+        });
+        axios.get(`${apiUrl}/product/insights/productByCategories`).then((res)=>{
+            setProductByCategory(res.data)
+        });
+
+    })
     useEffect(() => {
         axios.get(`${apiUrl}/categories/showCategories`).then(
             (res) => setCategories(res.data)
         )
     }, [UpdateTable])
+
+    useEffect(() => {
+        const month = new Date().getMonth() + 1;
+        setCurrentMonth(month);
+        console.log('current month is ' + month);
+    }, [])
 
     function deleteProduct(id) {
         Swal.fire({
@@ -129,7 +146,24 @@ function Dashboard() {
 
     return (
         <div className="p-3 m-4" >
-            <div style={{ display: 'flex', flexDirection: 'row', gap: '60px', justifyContent: 'center', padding: '10px', marginTop:'50px' }}>
+            <div style={{ display: 'flex', flexDirection: 'row', gap: '60px', justifyContent: 'center', padding: '10px', marginTop: '50px' }}>
+                <div>
+                    <select className="form-control" value={currentMonth} onChange={(e) => setCurrentMonth(e.target.value)}>
+                        <option value='0' >Select Month</option>
+                        <option value='1'>January</option>
+                        <option value='2'>Feburary</option>
+                        <option value='3'>March</option>
+                        <option value='4'>April</option>
+                        <option value='5'>May</option>
+                        <option value='6'>June</option>
+                        <option value='7'>July</option>
+                        <option value='8'>August</option>
+                        <option value='9'>September</option>
+                        <option value='10'>October</option>
+                        <option value='11'>November</option>
+                        <option value='12'>December</option>
+                    </select>
+                </div>
                 <Cards
                     image={sold_img}
                     heading='Total Items Sold'
@@ -158,6 +192,21 @@ function Dashboard() {
             </div>
             <br></br>
             <br></br>
+
+            <div className="d-flex justify-content-center gap-5">
+                <div className="div1">
+                    <h1>Products Per Month</h1>
+                    {productsPerMonth &&  <PieChart data={productsPerMonth} ></PieChart>}
+                </div>
+                <div className="div2">
+                <h1>Products Per Category</h1>
+                {productsByCategory &&  <PieChart data={productsByCategory} ></PieChart>}
+                </div>
+                <div className="div3">
+
+                </div>
+            </div>
+
             <div style={{ display: 'flex', justifyContent: 'space-around' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '700px', alignItems: 'center', boxShadow: '1px 2px 9px grey', borderRadius: '10px', padding: '10px', backgroundColor: '#CDE8E5' }} >
                     <div style={{ height: 'auto' }} >
@@ -225,18 +274,18 @@ function Dashboard() {
 
                             <div className="form-group text-center">
                                 <label> </label>
-                                <input style={{ background: '#7AB2B2', border: "5px solid white", boxShadow: '1px 2px 9px #aaf4e5', borderRadius: '20px', color: 'white',fontWeight:'600' }} className="btn btn-success" type="submit" value="Add Product"></input>
+                                <input style={{ background: '#7AB2B2', border: "5px solid white", boxShadow: '1px 2px 9px #aaf4e5', borderRadius: '20px', color: 'white', fontWeight: '600' }} className="btn btn-success" type="submit" value="Add Product"></input>
                             </div>
                         </form>
                     </div>
                 </div>
             </div>
             <hr></hr>
-            
-            {insights.total_products && insights.total_products.length > 0 &&(   <div id='table-products' >
+
+            {insights.total_products && insights.total_products.length > 0 && (<div id='table-products' >
                 <table className="table-striped " style={{ backgroundColor: '', width: '100%' }}>
-                    <thead style={{ borderBottom: '3px solid aqua' ,backgroundColor:'#7AB2B2',color:'white'}}>
-                        <tr>
+                    <thead style={{ borderBottom: '3px solid aqua', backgroundColor: '#7AB2B2', color: 'white' }}>
+                        <tr className="text-center">
                             <th>Sr.No</th>
                             <th>Image</th>
                             <th>Name</th>
@@ -266,13 +315,13 @@ function Dashboard() {
                                     <td className="p-3" style={{ cursor: 'pointer' }} onClick={() => handleUpdate('enter price', product.gender, 'gender', product.id, 'text')}>{product.gender}</td>
                                     <td className="p-3" style={{ cursor: 'pointer' }} onClick={() => handleUpdate('Add To Summer Collection ? yes/no', product.summer_collection, 'summer_collection', product.id, 'text')}>{product.summer_collection}</td>
                                     <td className="p-3" style={{ cursor: 'pointer' }} onClick={() => handleUpdate('Want to give 40 % off ? yes/no', product.discount_40, 'discount_40', product.id, 'text')}>{product.discount_40}</td>
-                                    <td className="p-3"><button style={{ color: 'red', backgroundColor:'#7AB2B2', border: "1px solid white", boxShadow: '1px 2px 3px yellowgreen', borderRadius: '2px',fontWeight:'700'}} onClick={() => deleteProduct(product.id)} className="btn ">Delete</button></td>
-                                    <td><button className="btn" style={{ color: 'black', backgroundColor:'#7AB2B2', border: "1px solid white", boxShadow: '1px 2px 3px yellowgreen', borderRadius: '2px', color:'white',fontWeight:'700'}} onClick={() => navigate(`/product/${product.id}`)}>&nbsp;View&nbsp;</button></td>
+                                    <td className="p-3"><button style={{ color: 'red', backgroundColor: '#7AB2B2', border: "1px solid white", boxShadow: '1px 2px 3px yellowgreen', borderRadius: '2px', fontWeight: '700' }} onClick={() => deleteProduct(product.id)} className="btn ">Delete</button></td>
+                                    <td><button className="btn" style={{ color: 'black', backgroundColor: '#7AB2B2', border: "1px solid white", boxShadow: '1px 2px 3px yellowgreen', borderRadius: '2px', color: 'white', fontWeight: '700' }} onClick={() => navigate(`/product/${product.id}`)}>&nbsp;View&nbsp;</button></td>
 
 
                                 </tr>
                             ))
-                        ) }
+                        )}
                     </tbody>
                 </table>
             </div>)}

@@ -5,6 +5,8 @@ const router = express.Router();
 router.use(express.json());
 const multer = require('multer');
 
+
+
 const time = Date.now();
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -82,8 +84,6 @@ router.get('/filter/:filter_type', (req, res) => {
   let countQuery=query;
 
   query += `limit ${start},4;`
-  
-  
   connection.query(query, (err, rowsResult) => {
     if (err) res.json(err)
     const rows=rowsResult;
@@ -98,6 +98,29 @@ router.get('/filter/:filter_type', (req, res) => {
     })
 
 })
+
+router.get('/insights/monthwise',(req,res)=>{
+  
+  const query='select  monthname(created_date) as `name`, count(*) as count from products group by monthname(created_date)';
+  connection.query(query,(err,result)=>{
+    if(err)
+      res.json(err)
+    else
+    {
+      res.json(result) 
+    }
+  })
+})
+
+router.get('/insights/productByCategories',(req,res)=>{
+  const query=`select categories.name, count(categories.name) as count from products
+               inner join categories on products.category_id=categories.id
+               group by categories.name`;
+  connection.query(query,(err,result)=>{
+    res.json(result);
+  })
+})
+
 
 
 

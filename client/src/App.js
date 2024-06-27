@@ -151,7 +151,7 @@ function App() {
                       return (
                         <div className='parent' onClick={() => { }} style={{ cursor: 'pointer', display: 'flex', alignContent: 'space-around', gap: '10px', width: '90px', height: 'auto', justifyContent: 'space-around', fontSize: '15px' }}>
                           <div className='div3' style={{ display: 'flex', flexDirection: 'column', gap: '10px', backgroundColor: '#CDE8E5' }}>
-                            <NavLink to={`/product/${data.id}`} onClick={(e) => { document.getElementById('dropdownDiv').style.display = 'none' }} style={{ color: 'black', textDecoration: 'none' }}>
+                            <NavLink to={`/product/${data.id}`} className='product-navlink' onClick={(e) => { document.getElementById('dropdownDiv').style.display = 'none' }} style={{ color: 'black', textDecoration: 'none' }}>
                               <div className='' >
                                 <div className=''><img src={`http://localhost:4000/uploads/${data.image}`} style={{ height: '50px', width: '50px', }} /></div>
                               </div>

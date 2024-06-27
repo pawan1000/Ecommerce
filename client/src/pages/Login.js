@@ -4,6 +4,7 @@ import {useNavigate} from 'react-router-dom'
 import { AuthContext } from '../helpers/AuthContext'
 import Swal from 'sweetalert2'
 import TestComponent from './testComponent'
+import Footer from '../helpers/Footer'
 const Login = () => {
   const apiUrl=process.env.REACT_APP_API_URL;
   const [username, setUsername] = useState();
@@ -54,6 +55,7 @@ const Login = () => {
   }
 
   return (
+    <>
     <div className='parent ' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
       <div className='child' style={{height:'500px',width:'500px',boxShadow: '1px 2px 9px #5f8981', borderRadius: '10px', margin: '100px',backgroundColor:'#CDE8E5'}}>
         <form className='form' onSubmit={handleLogin} style={{marginTop:'40px'}}>
@@ -71,12 +73,14 @@ const Login = () => {
           </div>
           <br></br>
           <br></br>
-          <div className='text-center btn-login form-group'style={{margin:'10px 70px'}} >
+          <div className='form-group'style={{margin:'10px 70px'}} >
             <input type='submit' className='form-control btn-login submit-btn'  ></input>
           </div>
         </form>
       </div>
     </div>
+    <Footer />
+    </>
 
   )
 }

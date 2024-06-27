@@ -19,5 +19,5 @@ app.use('/uploads', express.static('uploads'));
 
 
 app.listen(process.env.PORT,()=>{
-console.log('server running on port 4000..');
+console.log('server running on port ..',process.env.PORT);
 })
