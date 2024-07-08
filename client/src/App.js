@@ -17,6 +17,7 @@ import { IoSearchSharp } from "react-icons/io5";
 import { BsCaretDownFill } from "react-icons/bs";
 import { GiRunningShoe } from "react-icons/gi";
 import Swal from 'sweetalert2';
+import Payment from './pages/Payment';
 
 function App() {
   const [categories, setCategories] = useState([]);
@@ -131,7 +132,7 @@ function App() {
 
             <div className='col-md-3' style={{ position: 'relative', zIndex: 101 }}>
               <div style={{ position: 'relative', }}>
-                <input type='text' onChange={handleSearchInput} id="searchDiv" onClick={handleSearchDiv} style={{ borderRadius: '20px', fontFamily: "sans-serif", fontSize: '15px', padding: '10px', height: '36px', border: '1px solid #7AB2B2', backgroundColor: '#7AB2B2', width: '80%', color: '#EEF7FF' }} className='text-light' placeholder='Search Style,Brands & more... '></input>
+                <input type='text' className='inputSearch' onChange={handleSearchInput} id="searchDiv" onClick={handleSearchDiv} style={{ borderRadius: '20px', fontFamily: "sans-serif", fontSize: '15px', padding: '10px', height: '36px', border: '1px solid #7AB2B2', backgroundColor: '#7AB2B2', width: '80%', color: 'white' }}  placeholder='Search Style,Brands & more... '></input>
                 < IoSearchSharp style={{ height: '36px', position: 'absolute', left: '70%' }} />
               </div>
               <div id="dropdownDiv" style={{ zIndex: 1, width: '150%', height: '600px', position: 'absolute', top: '50px', backgroundColor: '#CDE8E5', display: 'none', justifyContent: 'space-between' }}>
@@ -237,9 +238,8 @@ function App() {
             <Route path='/Carts' exact element={<Carts />} />
             <Route path='/Dashboard' exact element={<Dashboard />} />
             <Route path='/Categories/:name' exact element={<Categories />} />
-
+            <Route path='/payment' exact element= {<Payment />} />
           </Routes>
-
         </BrowserRouter>
       </AuthContext.Provider>
     </div>

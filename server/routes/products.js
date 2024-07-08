@@ -121,6 +121,13 @@ router.get('/insights/productByCategories',(req,res)=>{
   })
 })
 
+router.get('/insights/productByGender',(req,res)=>{
+  const query='select gender as name,count(*) as count from products group by gender';
+  connection.query(query,(err,result)=>{
+    if(result) res.json(result);
+    else res.json(err);
+  })
+})
 
 
 

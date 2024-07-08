@@ -10,6 +10,7 @@ import sneaker_form from '../assets/sneaker_form.png';
 import Swal from "sweetalert2";
 import Cards from "../helpers/Cards";
 import PieChart from "../helpers/PieChart";
+import BarChart from "../helpers/BarChart";
 function Dashboard() {
     const apiUrl = process.env.REACT_APP_API_URL;
     const navigate = useNavigate();
@@ -27,6 +28,7 @@ function Dashboard() {
     const [currentMonth, setCurrentMonth] = useState(1);
     const [productsPerMonth,setProductsPerMonth]=useState([]);
     const [productsByCategory,setProductByCategory]=useState([]);
+    const [productsByGender,setProductByGender]=useState([]);
     useEffect(() => {
         if (authState.userType !== 'seller') {
             navigate('/');
@@ -50,7 +52,9 @@ function Dashboard() {
         axios.get(`${apiUrl}/product/insights/productByCategories`).then((res)=>{
             setProductByCategory(res.data)
         });
-
+        axios.get(`${apiUrl}/product/insights/productByGender`).then((res)=>{
+            setProductByGender(res.data)
+        });
     })
     useEffect(() => {
         axios.get(`${apiUrl}/categories/showCategories`).then(
@@ -149,7 +153,7 @@ function Dashboard() {
             <div style={{ display: 'flex', flexDirection: 'row', gap: '60px', justifyContent: 'center', padding: '10px', marginTop: '50px' }}>
                 <div>
                     <select className="form-control" value={currentMonth} onChange={(e) => setCurrentMonth(e.target.value)}>
-                        <option value='0' >Select Month</option>
+                        <option value='0' >Gross</option>
                         <option value='1'>January</option>
                         <option value='2'>Feburary</option>
                         <option value='3'>March</option>
@@ -193,17 +197,18 @@ function Dashboard() {
             <br></br>
             <br></br>
 
-            <div className="d-flex justify-content-center gap-5">
-                <div className="div1">
-                    <h1>Products Per Month</h1>
+            <div className="d-flex justify-content-center gap-5 m-4">
+                <div className="graph p-3" >
+                    <h1 style={{backgroundColor:'#cae9ef'}}>Products Per Month</h1>
                     {productsPerMonth &&  <PieChart data={productsPerMonth} ></PieChart>}
                 </div>
-                <div className="div2">
-                <h1>Products Per Category</h1>
-                {productsByCategory &&  <PieChart data={productsByCategory} ></PieChart>}
+                <div className="graph p-3" >
+                <h1 style={{backgroundColor:'#cae9ef'}}>Products Per Category</h1>
+                {productsByCategory &&  <BarChart data={productsByCategory} ></BarChart>}
                 </div>
-                <div className="div3">
-
+                <div className="graph p-3">
+                <h1 style={{backgroundColor:'#cae9ef'}}>Products Per Gender</h1>
+                {productsByGender &&  <PieChart data={productsByGender} ></PieChart>}
                 </div>
             </div>
 

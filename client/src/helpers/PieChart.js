@@ -1,7 +1,7 @@
 import React from "react";
-import { VictoryPie  } from 'victory';
-function PieChart({data})
-{
+import { VictoryPie, VictoryLabel } from 'victory';
+
+function PieChart({ data }) {
     const chartData = data.map(item => ({
         x: item.name,
         y: item.count
@@ -18,18 +18,27 @@ function PieChart({data})
         "rgb(100, 138, 138)",
         "rgb(52, 120, 108)",
         "rgb(192, 1, 248)"
-      ];
+    ];
 
     return (
-        <div>
+        <div style={{ width: '100%', height: '100%', padding: '20px' }}>
             <VictoryPie
                 data={chartData}
-                innerRadius={100} 
+                innerRadius={100}
                 colorScale={colors}
                 labels={({ datum }) => `${datum.x}: ${datum.y}`}
+                labelComponent={<VictoryLabel angle={0} />}
+                style={{
+                    labels: {
+                        fontSize: 10, // Adjust font size if needed
+                        padding: 10,
+                        fill: "black" // Set label color to ensure visibility
+                    }
+                }}
+                padding={{ top: 20, bottom: 20, left: 50, right: 50 }}
             />
         </div>
-    )
+    );
 }
 
 export default PieChart;
