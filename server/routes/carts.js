@@ -13,6 +13,24 @@ router.get('/', (req, res) => {
     })
 })
 
+router.put('/update/quantity/:id', (req, res) => {
+    const cartId = req.params.id;
+    try {
+        const quantity = req.body.quantity;
+        const query = 'update carts set quantity=? where id=?';
+        connection.query(query, [quantity, cartId], (err, result) => {
+            if (err)
+                res.json(err)
+            else
+                res.json(result)
+        })
+    }
+    catch(error)
+    {
+        console.log(error)
+    }
+})
+
 router.delete('/delete/:id', (req, res) => {
     const id = req.params.id;
     const query = 'delete from carts where id=?';
@@ -25,6 +43,8 @@ router.delete('/delete/:id', (req, res) => {
         }
     })
 })
+
+
 
 router.put('/update/:id', (req, res) => {
     const id = req.params.id;
@@ -41,7 +61,7 @@ router.put('/update/:id', (req, res) => {
 
 router.post('/addToCart', validateToken, (req, res) => {
     const query = 'INSERT INTO carts (name, price, image, product_id,user_id,size) VALUES (?, ?, ?, ?,?,?)';
-    connection.query(query, [req.body.name, req.body.price, req.body.image, req.body.id, req.body.user_id,req.body.size], (err, result) => {
+    connection.query(query, [req.body.name, req.body.price, req.body.image, req.body.id, req.body.user_id, req.body.size], (err, result) => {
         if (err) {
             res.json(err);
         } else {
@@ -65,7 +85,7 @@ router.get('/categories', (req, res) => {
 router.get('/insights/:id', async (req, res) => {
     try {
         const seller_id = req.params.id;
-        let month=req.query.month;
+        let month = req.query.month;
         const data = {};
 
         const query1 = 'select count(*) as total_purchase from carts inner join products on carts.product_id = products.id where carts.status = "purchased" and products.seller_id = ? ';
@@ -73,7 +93,7 @@ router.get('/insights/:id', async (req, res) => {
         data.total_purchase = totalPurchaseResult[0].total_purchase;
 
         const query2 = 'select avg(price) as avg_price from products where seller_id=? and month(created_date)=?';
-        const avgPriceResult = await executeQuery(query2, [seller_id,month]);
+        const avgPriceResult = await executeQuery(query2, [seller_id, month]);
         data.avg_price = avgPriceResult[0].avg_price || 0;
 
         const query3 = 'select count(*) as total_return from carts inner join products on carts.product_id = products.id where carts.status = "returned" and products.seller_id = ?';
@@ -88,8 +108,8 @@ router.get('/insights/:id', async (req, res) => {
             data.top_selling_product = 'No sales yet';
         }
 
-        const query5='select *  from products where seller_id=? and month(created_date)=? ';
-        const totalProducts=await executeQuery(query5,[seller_id,month]);
+        const query5 = 'select *  from products where seller_id=? and month(created_date)=? ';
+        const totalProducts = await executeQuery(query5, [seller_id, month]);
         data.total_products = totalProducts.length ? totalProducts : [];
 
         res.json(data);
@@ -111,19 +131,18 @@ function executeQuery(query, params) {
     });
 }
 
-router.get('/fool',(req,res)=>{
-  
-    const query='select count(*) as count, month(created_date) as `Month` from products group by month(created_date)';
-    connection.query(query,(err,result)=>{
-      if(err)
-        res.json(err)
-      else
-      {
-        console.log('hello');
-        console.log(result);
-        res.json(result)
-        
-      }
+router.get('/fool', (req, res) => {
+
+    const query = 'select count(*) as count, month(created_date) as `Month` from products group by month(created_date)';
+    connection.query(query, (err, result) => {
+        if (err)
+            res.json(err)
+        else {
+            console.log('hello');
+            console.log(result);
+            res.json(result)
+
+        }
     })
 })
 

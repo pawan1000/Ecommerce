@@ -30,6 +30,11 @@ function Carts() {
                 updatedItems[index].quantity = 0; // Ensure quantity doesn't go below 0
             }
         }
+        axios.put(`${apiUrl}/carts/update/quantity/${updatedItems[index].id}`,{quantity:updatedItems[index].quantity}).then((res)=>{
+            console.log(res);
+        }).catch((err)=>{
+            console.log(err);
+        })
         setItems(updatedItems);
     }
 
