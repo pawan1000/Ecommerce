@@ -78,34 +78,36 @@ function Carts() {
     }
 
     function addToPurchase(product) {
-        Swal.fire({
-            title: 'Thank You  ',
-            text: `For Purchasing ${[product.name]}`,
-            icon: 'success',
-            confirmButtonText: 'OK',
+        navigate(`/payment/${product.id}`)
 
-        }).then(
-            () => {
-                axios.put(`${apiUrl}/carts/update/${product.id}`, { headers: { accessToken: sessionStorage.getItem('accessToken') } }).then(
-                    (res) => {
-                        if (res.data.error) {
-                            alert('user not logged in');
-                            console.log(res);
-                            return;
-                        }
-                        else {
-                            setCartCount(cartCount - 1)
-                        }
-                    }
-                ).catch(
-                    (err) => { console.log(err); }
-                )
+        // Swal.fire({
+        //     title: 'Thank You  ',
+        //     text: `For Purchasing ${[product.name]}`,
+        //     icon: 'success',
+        //     confirmButtonText: 'OK',
 
-                const filterlist = items.filter((item) => item.id != product.id)
-                setItems(filterlist);
-                console.log(product.id);
-            }
-        )
+        // }).then(
+        //     () => {
+        //         axios.put(`${apiUrl}/carts/update/${product.id}`, { headers: { accessToken: sessionStorage.getItem('accessToken') } }).then(
+        //             (res) => {
+        //                 if (res.data.error) {
+        //                     alert('user not logged in');
+        //                     console.log(res);
+        //                     return;
+        //                 }
+        //                 else {
+        //                     setCartCount(cartCount - 1)
+        //                 }
+        //             }
+        //         ).catch(
+        //             (err) => { console.log(err); }
+        //         )
+
+        //         const filterlist = items.filter((item) => item.id != product.id)
+        //         setItems(filterlist);
+        //         console.log(product.id);
+        //     }
+        // )
 
     }
 

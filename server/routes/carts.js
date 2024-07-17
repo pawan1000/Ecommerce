@@ -6,11 +6,28 @@ const { validateToken } = require('../middlewaer/AuthMiddlewares');
 
 
 router.get('/', (req, res) => {
-    const userId = req.query.user_id;
-    const query = 'select * from carts where user_id =? and status="cart"';
-    connection.query(query, [userId], (err, result) => {
-        res.json(result);
-    })
+    try {
+        const userId = req.query.user_id;
+        const cartID = req.query.cart_id;
+        let query = 'select * from carts where user_id =? and status="cart"';
+        if (cartID) {
+            query += 'and id=?';
+            connection.query(query, [userId, cartID], (err, result) => {
+                res.json(result);
+            })
+        }
+        else
+        {
+            connection.query(query, [userId], (err, result) => {
+                res.json(result);
+            })
+        }
+        
+    }
+    catch(e)
+    {
+        console.log(e);
+    }
 })
 
 router.put('/update/quantity/:id', (req, res) => {
@@ -25,8 +42,7 @@ router.put('/update/quantity/:id', (req, res) => {
                 res.json(result)
         })
     }
-    catch(error)
-    {
+    catch (error) {
         console.log(error)
     }
 })
@@ -48,8 +64,10 @@ router.delete('/delete/:id', (req, res) => {
 
 router.put('/update/:id', (req, res) => {
     const id = req.params.id;
-    const query = 'update carts set status="purchased" where id=?';
-    connection.query(query, [id], (err, result) => {
+    productIds=JSON.parse(id);
+    const placeholders = productIds.map(() => '?').join(','); 
+    const query = `update carts set status="purchased" where id in (${placeholders})`;
+    connection.query(query, productIds, (err, result) => {
         if (result) {
             res.json({ data: result, delete_id: id });
         }

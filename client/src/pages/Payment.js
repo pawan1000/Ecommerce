@@ -2,7 +2,7 @@ import React, { useContext, useState, useEffect } from "react";
 import qrCode from '../assets/qr_code.png';
 import { AuthContext } from "../helpers/AuthContext";
 import axios from "axios";
-import { useNavigate } from "react-router-dom";
+import { json, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 
 function Warning() {
@@ -13,9 +13,10 @@ function Warning() {
 
 const Payment = () => {
     const apiUrl = process.env.REACT_APP_API_URL;
-    const { authState } = useContext(AuthContext);
+    const { authState, cartCount,setCartCount } = useContext(AuthContext);
     let finalPrice = 100;
     let navigate = useNavigate();
+    const { cartId } = useParams();
 
     const [creditCard, setCreditCard] = useState(true);
     const [payPal, setPayPal] = useState(false);
@@ -24,7 +25,11 @@ const Payment = () => {
     const [warningFor, setWarningFor] = useState([]);
 
     useEffect(() => {
-        axios.get(`${apiUrl}/carts/?user_id=${authState.user_id}`).then(
+        let url = `${apiUrl}/carts/?user_id=${authState.user_id}`
+        if (cartId) {
+            url += `&cart_id=${cartId}`;
+        }
+        axios.get(url).then(
             (res) => {
                 if (res.data.length) {
                     setItems(res.data);
@@ -76,7 +81,31 @@ const Payment = () => {
             }
         });
         if (emptyFields.length == 0) {
-            Swal.fire('Thankyou For Purchasing')
+            let products=''
+            if (cartId) {
+                products = JSON.stringify([Number(cartId)]);
+            }
+            else {
+                const productIds = items.map((item) => item.id);
+                const productIdsString = JSON.stringify(productIds);
+                products = productIdsString
+            }
+            axios.put(`${apiUrl}/carts/update/${products}`).then((res) => {
+                let noOfItemPurchased=res.data.data.affectedRows;
+                setCartCount(cartCount-noOfItemPurchased);
+                Swal.fire({
+                    title: 'Thank You  ',
+                    text: `For Purchasing `,
+                    icon: 'success',
+                    confirmButtonText: 'OK',
+                }).then((result)=>{
+                    if(result.isConfirmed){
+                        navigate('/')
+                    }
+                })
+            })
+
+
         }
         setWarningFor(emptyFields);
     }
@@ -144,7 +173,7 @@ const Payment = () => {
                                     {warningFor.includes('password') && <Warning />}
                                 </div>
                                 <div className="paybuton d-flex flex-column">
-                                    <button className="pay-now" onClick={(e)=>handlePayment(e,['email','password'])}>Pay Now</button>
+                                    <button className="pay-now" onClick={(e) => handlePayment(e, ['email', 'password'])}>Pay Now</button>
                                 </div>
                             </div>}
                         </div>
@@ -162,7 +191,7 @@ const Payment = () => {
                                     <div className="d-flex gap-2 flex-column">
                                         <input type='text' className='inputPayment w-100' id='upiId' placeholder="example@ybl.com"></input>
                                         {warningFor.includes('upiId') && <Warning></Warning>}
-                                        <button className="pay-now" onClick={(e)=>handlePayment(e,['upiId'])}>Pay Now</button>
+                                        <button className="pay-now" onClick={(e) => handlePayment(e, ['upiId'])}>Pay Now</button>
                                     </div>
                                     <div style={{ fontFamily: 'sans-serif' }}>OR</div>
                                     <div>
