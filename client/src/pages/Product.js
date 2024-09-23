@@ -7,9 +7,10 @@ import { AuthContext } from '../helpers/AuthContext';
 import Swal from 'sweetalert2';
 import ProductCard from '../helpers/ProductCard';
 import Footer from '../helpers/Footer';
+import FeedBack from '../helpers/FeedBack';
 
 const Product = () => {
-  const apiUrl=process.env.REACT_APP_API_URL;
+  const apiUrl = process.env.REACT_APP_API_URL;
   const params = useParams();
   const id = params.id;
   const [product, setProduct] = useState([]);
@@ -40,7 +41,6 @@ const Product = () => {
       btn.style.display = 'block';
   }
 
-
   function addToCart(item) {
     item.user_id = authState.user_id;
     console.log('in products addToCart function' + item);
@@ -50,9 +50,9 @@ const Product = () => {
         console.log(res);
         if (res.data.error) {
           Swal.fire({
-            title:'Please Login !',
-            text:'To Continue',
-            timer:'1000'
+            title: 'Please Login !',
+            text: 'To Continue',
+            timer: '1000'
           })
           return;
         }
@@ -82,10 +82,8 @@ const Product = () => {
   return (
     <>
       <div className='parent p-3 m-4' style={{ display: 'flex', gap: '10px', backgroundColor: '' }}>
-
         <div className='div1' style={{ display: 'flex', gap: '4px', justifyContent: 'center', flexDirection: 'column' }} >
         </div>
-
         <div className='div3' style={{ marginLeft: '60px', maxWidthidth: '700px', display: 'flex', flexDirection: 'row', gap: '100px' }}>
           {
             product.map((data) => {
@@ -95,7 +93,7 @@ const Product = () => {
                     <div className='' style={{ backgroundColor: '#e0f7fa' }} ><img className='img-product' src={`http://localhost:4000/uploads/${data.image}`} alt='no image' /></div>
                   </div>
                   <div>
-                    <div className='name' style={{ fontFamily: 'fantasy',fontSize:'40px',letterSpacing:'3px',color:'#7AB2B2' }}>{data.name}</div>
+                    <div className='name' style={{ fontFamily: 'fantasy', fontSize: '40px', letterSpacing: '3px', color: '#7AB2B2' }}>{data.name}</div>
                     <div className='gender' style={{ fontFamily: 'sans-serif', color: 'grey', fontSize: '20px' }}>{data.gender == 'male' ? (<>Mens</>) : (<>Womens</>)} Shoe</div>
                     <div className='rating'> {[...Array(data.rating)].map((_, index) => (
                       <span key={index}>&#9733;</span>
@@ -130,7 +128,13 @@ const Product = () => {
                     })}</div>
 
                     <br></br><br></br>
-                    <div className=''><button className='add-to-cart' style={{ display: 'block', width: '50%' }} onClick={() => addToCart(data)}>Add to cart</button></div>
+                    <div className='d-flex gap-4'>
+                      <button className='add-to-cart' style={{ display: 'block', width: '50%' }} onClick={() => addToCart(data)}>Add to cart</button>
+                      <button className='add-to-cart' style={{ display: 'block', width: '50%' }} onClick={() => addToCart(data)}>Buy Now</button>
+                      </div>
+                      <div className='feedback'> 
+                        <FeedBack />
+                      </div>
                   </div>
                 </>
               )
@@ -145,19 +149,19 @@ const Product = () => {
 
 
       <div style={{ display: 'flex', gap: '10px', flexDirection: 'row', flexFlow: 'wrap', flexWrap: 'nowrap' }} >
-        {category.length > 0 && 
-        (
-          category.slice(0,4).map((data,index) => {
-            return (
-              <ProductCard
+        {category.length > 0 &&
+          (
+            category.slice(0, 4).map((data, index) => {
+              return (
+                <ProductCard
                   type='sneaker'
                   item={data}
                   index={index}
                   toggleAddToCartButton={toggleAddToCartButton}
                 />
-            )
-          })
-        )
+              )
+            })
+          )
         }
       </div>
       <Footer />

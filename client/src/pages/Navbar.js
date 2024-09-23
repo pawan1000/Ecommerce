@@ -4,7 +4,7 @@ import { CiLogout } from "react-icons/ci";
 import { IoSearchSharp } from "react-icons/io5";
 import { BsCaretDownFill } from "react-icons/bs";
 import { GiRunningShoe } from "react-icons/gi";
-import { NavLink, useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import LoadingSpinner from "../helpers/LoadingSpinner";
 import { AuthContext } from "../helpers/AuthContext";
 import axios from 'axios';
@@ -29,7 +29,6 @@ const Navbar = () => {
             cat.name.toLowerCase().includes(tempinput)
         );
         setCategories(filterArray);
-
         const filterProducts = originalProducts.filter((product) =>
             product.name.toLowerCase().includes(tempinput)
         );
@@ -37,6 +36,7 @@ const Navbar = () => {
     }
 
     useEffect(() => {
+        setLoading(true);
         axios.get('http://localhost:4000/categories/showCategories')
             .then((res) => {
                 setCategories(res.data);
@@ -49,6 +49,7 @@ const Navbar = () => {
     }, []);
 
     useEffect(() => {
+        setLoading(true);
         axios.get('http://localhost:4000/product')
             .then((res) => {
                 setProducts(res.data);
@@ -61,9 +62,11 @@ const Navbar = () => {
     }, []);
 
     useEffect(() => {
+        setLoading(true);
         axios.get(`http://localhost:4000/carts/?user_id=${authState.user_id}`)
             .then((res) => {
                 setCartCount(res.data.length);
+                setLoading(false);
             });
     }, [authState, setCartCount]);
 
@@ -83,7 +86,7 @@ const Navbar = () => {
     }
 
     return (
-        <div className='d-flex flex-row align-items-center justify-content-between flex-wrap' style={{ margin: '0px', width: '100%', backgroundColor: '#CDE8E5' }}>
+        <div className='d-flex flex-md-row flex-column align-items-center justify-content-between flex-wrap' style={{ margin: '0px', width: '100%', backgroundColor: '#CDE8E5' }}>
             <div className='' onClick={() => { document.getElementById('dropdownDiv').style.display = 'none'; navigate('/') }} style={{ width: '30%', position: 'relative', color: 'Black', fontFamily: 'arial', fontSize: '40px', cursor: 'pointer', textDecoration: 'none' }}>
                 The Joota Store <GiRunningShoe style={{ position: 'absolute', bottom: '20%', transform: 'rotate(10deg)' }} />
             </div>
@@ -154,7 +157,7 @@ const Navbar = () => {
                     </div>
                 </>
             ) : (
-                <div className=' nav-item ' style={{ width: '15%', display: 'flex', justifyContent: 'flex-end' }}>
+                <div className=' ' style={{ width: '15%', display: 'flex', justifyContent: 'flex-end' }}>
                     <button className='btn' onClick={(e) => { handleLogout(e); navigate('/') }} style={{ color: '#EEF7FF', fontWeight: 'bold', backgroundColor: '#7AB2B2', border: "1px solid white", borderRadius: '20px', boxShadow: '1px 2px 9px #aaf4e5' }}>
                         <CiLogout color='#EEF7FF' size={25} /> LOGOUT ,{authState.username}
                     </button>

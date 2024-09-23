@@ -4,7 +4,7 @@ import { AuthContext } from "../helpers/AuthContext";
 import axios from "axios";
 import { json, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
-
+import LoadingSpinner from "../helpers/LoadingSpinner";
 function Warning() {
     return (
         <div style={{ fontSize: '15px', color: 'red', fontWeight: '500' }}>Please Fill this field !</div>
@@ -13,33 +13,41 @@ function Warning() {
 
 const Payment = () => {
     const apiUrl = process.env.REACT_APP_API_URL;
-    const { authState, cartCount,setCartCount } = useContext(AuthContext);
+    const { authState, cartCount, setCartCount } = useContext(AuthContext);
     let finalPrice = 100;
     let navigate = useNavigate();
     const { cartId } = useParams();
-
     const [creditCard, setCreditCard] = useState(true);
     const [payPal, setPayPal] = useState(false);
     const [payByUpi, setPayByUpi] = useState(false);
     const [items, setItems] = useState([]);
     const [warningFor, setWarningFor] = useState([]);
+    const [loader, setLoader] = useState(false);
+
+    useEffect(() => {
+        if (!authState.status) {
+            navigate('/login');
+        }
+    })
 
     useEffect(() => {
         let url = `${apiUrl}/carts/?user_id=${authState.user_id}`
         if (cartId) {
             url += `&cart_id=${cartId}`;
         }
+        setLoader(true);
         axios.get(url).then(
             (res) => {
+                setLoader(false);
                 if (res.data.length) {
                     setItems(res.data);
                     console.log(res.data);
                 }
-                else {
-                    navigate('/');
-                }
             }
-        );
+        ).catch((err) => {
+            navigate('/');
+
+        });
     }, [authState, apiUrl, navigate]);
 
     function toggleDisplay(section) {
@@ -81,7 +89,7 @@ const Payment = () => {
             }
         });
         if (emptyFields.length == 0) {
-            let products=''
+            let products = ''
             if (cartId) {
                 products = JSON.stringify([Number(cartId)]);
             }
@@ -91,15 +99,15 @@ const Payment = () => {
                 products = productIdsString
             }
             axios.put(`${apiUrl}/carts/update/${products}`).then((res) => {
-                let noOfItemPurchased=res.data.data.affectedRows;
-                setCartCount(cartCount-noOfItemPurchased);
+                let noOfItemPurchased = res.data.data.affectedRows;
+                setCartCount(cartCount - noOfItemPurchased);
                 Swal.fire({
                     title: 'Thank You  ',
                     text: `For Purchasing `,
                     icon: 'success',
                     confirmButtonText: 'OK',
-                }).then((result)=>{
-                    if(result.isConfirmed){
+                }).then((result) => {
+                    if (result.isConfirmed) {
                         navigate('/')
                     }
                 })
