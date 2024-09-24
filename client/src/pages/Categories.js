@@ -8,10 +8,10 @@ import ProductCard from "../helpers/ProductCard";
 import Swal from "sweetalert2";
 import HomeNav from "../helpers/HomeNav";
 function Categories() {
-    const apiUrl=process.env.REACT_APP_API_URL;
+    const apiUrl = process.env.REACT_APP_API_URL;
     const [category, setCategory] = useState([]);
     const { name } = useParams();
-    const [categoryCount,setCategoryCount]=useState(0);
+    const [categoryCount, setCategoryCount] = useState(0);
     const navigate = useNavigate();
     const [searchParams, setSearchParams] = useSearchParams();
     let page = searchParams.get('page') || 0;
@@ -37,25 +37,24 @@ function Categories() {
         });
     }
 
-    
+
     useEffect(
         () => {
             console.log(name)
-            if (name == 'men' || name == 'women' || name == 'summer-collection' || name == 'flat-40-off') 
-            {
+            if (name == 'men' || name == 'women' || name == 'summer-collection' || name == 'flat-40-off') {
                 axios.get(`${apiUrl}/product/filter/${name}?page=${page}`).then(
-                    (res) => {setCategory(res.data.rows);setCategoryCount(res.data.total)}
+                    (res) => { setCategory(res.data.rows); setCategoryCount(res.data.total) }
                 )
             }
             else {
                 axios.get(`${apiUrl}/categories/${name}?page=${page}`).then(
                     (res) => {
-                        setCategory(res.data.rows);setCategoryCount(res.data.total); console.log(res);
+                        setCategory(res.data.rows); setCategoryCount(res.data.total); console.log(res);
                     }
                 )
             }
         }
-        , [name,page]
+        , [name, page]
     )
 
     if (category && category.length == 0) {
@@ -68,7 +67,7 @@ function Categories() {
     }
     return (
         <div>
-                <HomeNav />
+            <HomeNav />
 
             <div style={{ display: 'flex', gap: '40px', flexDirection: 'row', flexFlow: 'wrap', justifyContent: 'start', margin: '30px' }}>
                 {
@@ -87,7 +86,7 @@ function Categories() {
             </div>
 
             {
-                categoryCount > 0 ? (<Pagination   totalRecords={categoryCount} />) : ''
+                categoryCount > 0 ? (<Pagination totalRecords={categoryCount} />) : ''
             }
 
 

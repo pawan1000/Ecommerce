@@ -6,13 +6,16 @@ import Swal from 'sweetalert2'
 import { FaAnglesRight } from "react-icons/fa6";
 import Footer from "../helpers/Footer";
 import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { setCartCount } from "../redux/reducers/cartReducer";
 function Carts() {
     const apiUrl = process.env.REACT_APP_API_URL;
     const [items, setItems] = useState([]);
     const [categories, setCategories] = useState([]);
-    const [price, setPrice] = useState();
-    const [category, setCategory] = useState();
-    const { authState, setAuthState, cartCount, setCartCount } = useContext(AuthContext);
+    // const { authState, setAuthState, cartCount, setCartCount } = useContext(AuthContext); //used with context-api
+    const user = useSelector((state) => state.user);
+    const cartCount = useSelector((state) => state.cart);
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     const updatedItems = [...items];
     let total = 0;
@@ -30,9 +33,9 @@ function Carts() {
                 updatedItems[index].quantity = 0; // Ensure quantity doesn't go below 0
             }
         }
-        axios.put(`${apiUrl}/carts/update/quantity/${updatedItems[index].id}`,{quantity:updatedItems[index].quantity}).then((res)=>{
+        axios.put(`${apiUrl}/carts/update/quantity/${updatedItems[index].id}`, { quantity: updatedItems[index].quantity }).then((res) => {
             console.log(res);
-        }).catch((err)=>{
+        }).catch((err) => {
             console.log(err);
         })
         setItems(updatedItems);
@@ -57,7 +60,8 @@ function Carts() {
                                 return;
                             }
                             else {
-                                setCartCount(cartCount - 1);
+                                // setCartCount(cartCount - 1); 
+                                dispatch(setCartCount(cartCount - 1));
                             }
                         }
                     ).catch(
@@ -112,10 +116,10 @@ function Carts() {
     }
 
     useEffect(() => {
-        axios.get(`${apiUrl}/carts/?user_id=${authState.user_id}`).then(
+        axios.get(`${apiUrl}/carts/?user_id=${user.user_id}`).then(
             (res) => { setItems(res.data); console.log(res.data); }
         )
-    }, [authState])
+    }, [user])
 
     useEffect(() => {
         axios.get(`${apiUrl}/carts/categories`).then(
@@ -204,7 +208,7 @@ function Carts() {
                                     <div> Total</div>
                                     <div> <b>&#8377;{total + shipmentFee}</b></div>
                                 </div>
-                                <div className="text-center bg-dark text-light p-1" onClick={()=>navigate('/payment')} style={{ cursor: 'pointer', fontWeight: 'bold', letterSpacing: '1px', fontSize: '20px' }}>Procced to Checkout <FaAnglesRight /></div>
+                                <div className="text-center bg-dark text-light p-1" onClick={() => navigate('/payment')} style={{ cursor: 'pointer', fontWeight: 'bold', letterSpacing: '1px', fontSize: '20px' }}>Procced to Checkout <FaAnglesRight /></div>
                             </div>
 
                         </div>

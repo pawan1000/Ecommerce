@@ -8,7 +8,8 @@ import Swal from 'sweetalert2';
 import ProductCard from '../helpers/ProductCard';
 import Footer from '../helpers/Footer';
 import FeedBack from '../helpers/FeedBack';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { setCartCount } from '../redux/reducers/cartReducer';
 const Product = () => {
   const apiUrl = process.env.REACT_APP_API_URL;
   const params = useParams();
@@ -17,7 +18,10 @@ const Product = () => {
   const [size, setSize] = useState(8);
   const [category, setCategory] = useState([]);
   let navigate = useNavigate();
-  const { authState, setAuthState, cartCount, setCartCount } = useContext(AuthContext)
+  // const { authState, setAuthState, cartCount, setCartCount } = useContext(AuthContext) // used with context-api
+  const user = useSelector(state => state.user);
+  const cartCount = useSelector(state => state.cart)
+  const dispatch = useDispatch();
   useEffect(() => {
     axios.get(`${apiUrl}/product/${id}`).then(
       (res) => { setProduct(res.data); console.log(res.data); return res.data[0].category_id; }
@@ -42,7 +46,7 @@ const Product = () => {
   }
 
   function addToCart(item) {
-    item.user_id = authState.user_id;
+    item.user_id = user.user_id;
     console.log('in products addToCart function' + item);
     item = { ...item, size: size };
     axios.post(`${apiUrl}/carts/addToCart`, item, { headers: { 'accessToken': sessionStorage.getItem('accessToken') } }).then(
@@ -63,7 +67,8 @@ const Product = () => {
           confirmButtonText: 'OK'
         }).then((result) => {
           if (result.isConfirmed) {
-            setCartCount(cartCount + 1);
+            // setCartCount(cartCount + 1);  //for context api
+            dispatch(setCartCount(cartCount + 1)) //for redux
             navigate('/carts');
           }
         })
@@ -131,10 +136,10 @@ const Product = () => {
                     <div className='d-flex gap-4'>
                       <button className='add-to-cart' style={{ display: 'block', width: '50%' }} onClick={() => addToCart(data)}>Add to cart</button>
                       <button className='add-to-cart' style={{ display: 'block', width: '50%' }} onClick={() => addToCart(data)}>Buy Now</button>
-                      </div>
-                      <div className='feedback'> 
-                        <FeedBack />
-                      </div>
+                    </div>
+                    <div className='feedback'>
+                      <FeedBack />
+                    </div>
                   </div>
                 </>
               )

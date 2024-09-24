@@ -11,23 +11,27 @@ import Dashboard from './pages/Dashboard';
 import Categories from './pages/Categories';
 import Navbar from './pages/Navbar';
 import Payment from './pages/Payment';
+import { useDispatch, useSelector } from 'react-redux';
+import { setUser } from './redux/reducers/userReducer';
 
 function App() {
 
-  const [authState, setAuthState] = useState({ username: '', status: false, userType: 'buyer', user_id: null })
-  const [cartCount, setCartCount] = useState(0);
-  const [loading, setLoading] = useState(true); // State to manage loading
+  // const [authState, setAuthState] = useState({ username: '', status: false, userType: 'buyer', user_id: null })  //Used with context-api
+  // const [cartCount, setCartCount] = useState(0);   //Used with context-api
   const [animate, setAnimate] = useState(false); // State to manage animation
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user);
 
   useEffect(() => {
     axios.get('http://localhost:4000/users/auth', { headers: { accessToken: sessionStorage.getItem('accessToken') } }).then(
       (res) => {
         console.log(res);
         if (res.data.error) {
-          setAuthState({ ...authState, status: false })
+          // setAuthState({ ...authState, status: false })
         }
         else {
-          setAuthState({ username: res.data.username, status: true, userType: res.data.userType, user_id: res.data.user_id })
+          // setAuthState({ username: res.data.username, status: true, userType: res.data.userType, user_id: res.data.user_id })
+          dispatch(setUser({ username: res.data.username, status: true, userType: res.data.userType, user_id: res.data.user_id }));
         }
       }
     )
@@ -37,23 +41,21 @@ function App() {
 
   return (
     <div className={`App ${animate ? 'fade-in' : ''}`}>
-      <AuthContext.Provider value={{ authState, setAuthState, cartCount, setCartCount }}>
-        <BrowserRouter>
-          <Navbar />
-          <Routes>
-            <Route path='/' exact element={<Home />} />
-            <Route path='/Register' exact element={<Register />} />
-            <Route path='/Register/:type' exact element={<Register />} />
-            <Route path='/Login' exact element={<Login />} />
-            <Route path='/product/:id' exact element={<Product />} />
-            <Route path='/Carts' exact element={<Carts />} />
-            <Route path='/Dashboard' exact element={<Dashboard />} />
-            <Route path='/Categories/:name' exact element={<Categories />} />
-            <Route path='/payment/:cartId' exact element={<Payment />} />
-            <Route path='/payment' exact element={<Payment />} />
-          </Routes>
-        </BrowserRouter>
-      </AuthContext.Provider>
+      <BrowserRouter>
+        <Navbar />
+        <Routes>
+          <Route path='/' exact element={<Home />} />
+          <Route path='/Register' exact element={<Register />} />
+          <Route path='/Register/:type' exact element={<Register />} />
+          <Route path='/Login' exact element={<Login />} />
+          <Route path='/product/:id' exact element={<Product />} />
+          <Route path='/Carts' exact element={<Carts />} />
+          <Route path='/Dashboard' exact element={<Dashboard />} />
+          <Route path='/Categories/:name' exact element={<Categories />} />
+          <Route path='/payment/:cartId' exact element={<Payment />} />
+          <Route path='/payment' exact element={<Payment />} />
+        </Routes>
+      </BrowserRouter>
     </div>
   );
 }

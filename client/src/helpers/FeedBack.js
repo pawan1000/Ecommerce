@@ -64,7 +64,7 @@ function FeedBack({ productId, userId, sellerId }) {
             }
         }
     }
-    
+
 
     return (
         <div>

@@ -20,7 +20,7 @@ const ProductCard = ({ type, item, index, toggleAddToCartButton, }) => {
                     <Card.Text>
                         {item.discount_40 === 'yes' ? (
                             <>
-                                <del style={{color:'darkgray'}}>&#8377;{item.price / 0.4}</del>  &#8377;{item.price}
+                                <del style={{ color: 'darkgray' }}>&#8377;{item.price / 0.4}</del>  &#8377;{item.price}
                             </>
                         ) : (
                             <>&#8377;{item.price}</>

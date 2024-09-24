@@ -22,7 +22,7 @@ function BarChart({ data }) {
             ticks: { stroke: "grey", size: 5 },
             tickLabels: { fontSize: 20, padding: 5 }
           }}
-          tickLabelComponent={<VictoryLabel angle={10} padding={10}/>}
+          tickLabelComponent={<VictoryLabel angle={10} padding={10} />}
         />
         <VictoryAxis
           dependentAxis

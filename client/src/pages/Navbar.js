@@ -4,11 +4,13 @@ import { CiLogout } from "react-icons/ci";
 import { IoSearchSharp } from "react-icons/io5";
 import { BsCaretDownFill } from "react-icons/bs";
 import { GiRunningShoe } from "react-icons/gi";
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import LoadingSpinner from "../helpers/LoadingSpinner";
 import { AuthContext } from "../helpers/AuthContext";
 import axios from 'axios';
-
+import { useDispatch, useSelector } from "react-redux";
+import { setUser } from "../redux/reducers/userReducer";
+import { setCartCount } from "../redux/reducers/cartReducer";
 const Navbar = () => {
     const [categories, setCategories] = useState([]);
     const [isVisible, setIsVisible] = useState(false);
@@ -16,7 +18,10 @@ const Navbar = () => {
     const [products, setProducts] = useState([]);
     const [originalProducts, setOriginalProducts] = useState([]);
     const [loading, setLoading] = useState(true); // State to manage loading
-    const { authState, setAuthState, cartCount, setCartCount } = useContext(AuthContext);
+    //    const { authState, setAuthState, cartCount, setCartCount } = useContext(AuthContext);// used with context-api
+    const user = useSelector((state) => state.user); //used with redux
+    const cartCount = useSelector((state) => state.cart);
+    const dispatch = useDispatch(); // used to dispatch action
     const navigate = useNavigate();
     const toggleDropdown = () => {
         setIsVisible(!isVisible);
@@ -63,17 +68,19 @@ const Navbar = () => {
 
     useEffect(() => {
         setLoading(true);
-        axios.get(`http://localhost:4000/carts/?user_id=${authState.user_id}`)
+        axios.get(`http://localhost:4000/carts/?user_id=${user.user_id}`)
             .then((res) => {
-                setCartCount(res.data.length);
+                // setCartCount(res.data.length);
+                dispatch(setCartCount(res.data.length));
                 setLoading(false);
             });
-    }, [authState, setCartCount]);
+    }, [user, cartCount]);
 
     function handleLogout(e) {
         e.preventDefault();
         sessionStorage.removeItem('accessToken');
-        setAuthState({ username: '', status: false, userType: '' });
+        // setAuthState({ username: '', status: false, userType: '' }); // used for context-api
+        dispatch(setUser({ username: '', status: false, userType: '', user_id: null }))
         document.getElementById('dropdownDiv').style.display = 'none';
     }
 
@@ -139,7 +146,7 @@ const Navbar = () => {
                 </div>
             </div>
 
-            {!authState.status ? (
+            {!user.status ? (
                 <>
                     <div className='' style={{ position: 'relative', width: '10%', display: 'flex', justifyContent: 'flex-end' }}>
                         <div onClick={toggleDropdown} className='' style={{ cursor: 'pointer', fontFamily: 'Arial', fontWeight: 'bold', fontSize: '20px', backgroundColor: '#7AB2B2', color: 'white', padding: '5px', borderRadius: '20px', textDecoration: 'none' }}>
@@ -159,12 +166,12 @@ const Navbar = () => {
             ) : (
                 <div className=' ' style={{ width: '15%', display: 'flex', justifyContent: 'flex-end' }}>
                     <button className='btn' onClick={(e) => { handleLogout(e); navigate('/') }} style={{ color: '#EEF7FF', fontWeight: 'bold', backgroundColor: '#7AB2B2', border: "1px solid white", borderRadius: '20px', boxShadow: '1px 2px 9px #aaf4e5' }}>
-                        <CiLogout color='#EEF7FF' size={25} /> LOGOUT ,{authState.username}
+                        <CiLogout color='#EEF7FF' size={25} /> LOGOUT ,{user.username}
                     </button>
                 </div>
             )}
 
-            {authState.status && (
+            {user.status && (
                 <div className=' nav-item  position-relative' style={{ width: '5%', padding: '10px', display: 'flex', justifyContent: 'flex-end' }}>
                     <div onClick={() => { document.getElementById('dropdownDiv').style.display = 'none'; navigate('/carts') }} style={{ color: 'yellow', cursor: 'pointer', fontFamily: 'Arial', fontSize: '25px', textDecoration: 'none' }}>
                         <FaCartPlus style={{ color: 'black', size: '40px' }} />
@@ -175,7 +182,7 @@ const Navbar = () => {
                 </div>
             )}
 
-            {authState.userType === 'seller' && (
+            {user.userType === 'seller' && (
                 <div className=' nav-item text-center' onClick={() => navigate('/Dashboard')} style={{ cursor: 'pointer', width: '10%', display: 'flex', justifyContent: 'flex-end', color: '#EEF7FF', padding: '5px 10px', fontWeight: 'bold', backgroundColor: '#7AB2B2', border: "1px solid white", borderRadius: '20px', boxShadow: '1px 2px 9px #aaf4e5', textDecorationLine: 'none' }}>
                     DASHBOARD
                 </div>

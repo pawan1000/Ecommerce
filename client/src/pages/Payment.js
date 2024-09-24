@@ -5,6 +5,8 @@ import axios from "axios";
 import { json, useNavigate, useParams } from "react-router-dom";
 import Swal from "sweetalert2";
 import LoadingSpinner from "../helpers/LoadingSpinner";
+import { useDispatch, useSelector } from "react-redux";
+import { setCartCount } from "../redux/reducers/cartReducer";
 function Warning() {
     return (
         <div style={{ fontSize: '15px', color: 'red', fontWeight: '500' }}>Please Fill this field !</div>
@@ -13,7 +15,10 @@ function Warning() {
 
 const Payment = () => {
     const apiUrl = process.env.REACT_APP_API_URL;
-    const { authState, cartCount, setCartCount } = useContext(AuthContext);
+    // const { authState, cartCount, setCartCount } = useContext(AuthContext); // used for context-api
+    const user = useSelector((state) => state.user);
+    const cartCount = useSelector(state => state.cart);
+    const dispatch = useDispatch();
     let finalPrice = 100;
     let navigate = useNavigate();
     const { cartId } = useParams();
@@ -25,13 +30,13 @@ const Payment = () => {
     const [loader, setLoader] = useState(false);
 
     useEffect(() => {
-        if (!authState.status) {
+        if (!user.status) {
             navigate('/login');
         }
     })
 
     useEffect(() => {
-        let url = `${apiUrl}/carts/?user_id=${authState.user_id}`
+        let url = `${apiUrl}/carts/?user_id=${user.user_id}`
         if (cartId) {
             url += `&cart_id=${cartId}`;
         }
@@ -48,7 +53,7 @@ const Payment = () => {
             navigate('/');
 
         });
-    }, [authState, apiUrl, navigate]);
+    }, [user, apiUrl, navigate]);
 
     function toggleDisplay(section) {
         if (section === 'creditCard') {
@@ -100,7 +105,8 @@ const Payment = () => {
             }
             axios.put(`${apiUrl}/carts/update/${products}`).then((res) => {
                 let noOfItemPurchased = res.data.data.affectedRows;
-                setCartCount(cartCount - noOfItemPurchased);
+                // setCartCount(cartCount - noOfItemPurchased); 
+                dispatch(setCartCount(cartCount - noOfItemPurchased));  //using redux
                 Swal.fire({
                     title: 'Thank You  ',
                     text: `For Purchasing `,

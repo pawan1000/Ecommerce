@@ -11,10 +11,13 @@ import Swal from "sweetalert2";
 import Cards from "../helpers/Cards";
 import PieChart from "../helpers/PieChart";
 import BarChart from "../helpers/BarChart";
+import { useDispatch, useSelector } from "react-redux";
 function Dashboard() {
     const apiUrl = process.env.REACT_APP_API_URL;
     const navigate = useNavigate();
-    const { authState, setAuthState } = useContext(AuthContext);
+    // const { authState, setAuthState } = useContext(AuthContext); // used with context-api
+    const user = useSelector((state) => state.user) // for redux
+    const dispatch = useDispatch();
     const [categories, setCategories] = useState([]);
     const [insights, setInsights] = useState([]);
     const [name, setName] = useState('');
@@ -26,33 +29,33 @@ function Dashboard() {
     const [rating, setRating] = useState(1);
     const [UpdateTable, setUpdateTable] = useState(false);
     const [currentMonth, setCurrentMonth] = useState(1);
-    const [productsPerMonth,setProductsPerMonth]=useState([]);
-    const [productsByCategory,setProductByCategory]=useState([]);
-    const [productsByGender,setProductByGender]=useState([]);
+    const [productsPerMonth, setProductsPerMonth] = useState([]);
+    const [productsByCategory, setProductByCategory] = useState([]);
+    const [productsByGender, setProductByGender] = useState([]);
     useEffect(() => {
-        if (authState.userType !== 'seller') {
+        if (user.userType !== 'seller') {
             navigate('/');
             return;
         }
     })
 
     useEffect(() => {
-        axios.get(`${apiUrl}/carts/insights/${authState.user_id}?month=${currentMonth}`).then(
+        axios.get(`${apiUrl}/carts/insights/${user.user_id}?month=${currentMonth}`).then(
             res => {
                 console.log(res);
                 setInsights(res.data);
             }
         )
-    }, [authState, UpdateTable, currentMonth])
+    }, [user, UpdateTable, currentMonth])
 
-    useEffect(()=>{
-        axios.get(`${apiUrl}/product/insights/monthwise`).then((res)=>{
+    useEffect(() => {
+        axios.get(`${apiUrl}/product/insights/monthwise`).then((res) => {
             setProductsPerMonth(res.data)
         });
-        axios.get(`${apiUrl}/product/insights/productByCategories`).then((res)=>{
+        axios.get(`${apiUrl}/product/insights/productByCategories`).then((res) => {
             setProductByCategory(res.data)
         });
-        axios.get(`${apiUrl}/product/insights/productByGender`).then((res)=>{
+        axios.get(`${apiUrl}/product/insights/productByGender`).then((res) => {
             setProductByGender(res.data)
         });
     })
@@ -133,7 +136,7 @@ function Dashboard() {
         formData.append('description', description);
         formData.append('rating', rating);
 
-        formData.append('seller_id', authState.user_id)
+        formData.append('seller_id', user.user_id)
 
         axios.post(`${apiUrl}/product/addProduct`, formData).then((res) => {
             console.log(res)
@@ -199,16 +202,16 @@ function Dashboard() {
 
             <div className="d-flex justify-content-center gap-5 m-4">
                 <div className="graph p-3" >
-                    <h1 style={{backgroundColor:'#cae9ef'}}>Products Per Month</h1>
-                    {productsPerMonth &&  <PieChart data={productsPerMonth} ></PieChart>}
+                    <h1 style={{ backgroundColor: '#cae9ef' }}>Products Per Month</h1>
+                    {productsPerMonth && <PieChart data={productsPerMonth} ></PieChart>}
                 </div>
                 <div className="graph p-3" >
-                <h1 style={{backgroundColor:'#cae9ef'}}>Products Per Category</h1>
-                {productsByCategory &&  <BarChart data={productsByCategory} ></BarChart>}
+                    <h1 style={{ backgroundColor: '#cae9ef' }}>Products Per Category</h1>
+                    {productsByCategory && <BarChart data={productsByCategory} ></BarChart>}
                 </div>
                 <div className="graph p-3">
-                <h1 style={{backgroundColor:'#cae9ef'}}>Products Per Gender</h1>
-                {productsByGender &&  <PieChart data={productsByGender} ></PieChart>}
+                    <h1 style={{ backgroundColor: '#cae9ef' }}>Products Per Gender</h1>
+                    {productsByGender && <PieChart data={productsByGender} ></PieChart>}
                 </div>
             </div>
 
