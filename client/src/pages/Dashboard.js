@@ -12,6 +12,7 @@ import Cards from "../helpers/Cards";
 import PieChart from "../helpers/PieChart";
 import BarChart from "../helpers/BarChart";
 import { useDispatch, useSelector } from "react-redux";
+import LoadingSpinner from "../helpers/LoadingSpinner";
 function Dashboard() {
     const apiUrl = process.env.REACT_APP_API_URL;
     const navigate = useNavigate();
@@ -32,44 +33,55 @@ function Dashboard() {
     const [productsPerMonth, setProductsPerMonth] = useState([]);
     const [productsByCategory, setProductByCategory] = useState([]);
     const [productsByGender, setProductByGender] = useState([]);
+    const [loader, setLoader] = useState(false);
     useEffect(() => {
-        if (user.userType !== 'seller') {
+        if (user && user.userType !== 'seller') {
             navigate('/');
             return;
         }
-    })
-
-    useEffect(() => {
-        axios.get(`${apiUrl}/carts/insights/${user.user_id}?month=${currentMonth}`).then(
-            res => {
-                console.log(res);
-                setInsights(res.data);
-            }
-        )
-    }, [user, UpdateTable, currentMonth])
-
-    useEffect(() => {
-        axios.get(`${apiUrl}/product/insights/monthwise`).then((res) => {
-            setProductsPerMonth(res.data)
-        });
-        axios.get(`${apiUrl}/product/insights/productByCategories`).then((res) => {
-            setProductByCategory(res.data)
-        });
-        axios.get(`${apiUrl}/product/insights/productByGender`).then((res) => {
-            setProductByGender(res.data)
-        });
-    })
-    useEffect(() => {
-        axios.get(`${apiUrl}/categories/showCategories`).then(
-            (res) => setCategories(res.data)
-        )
-    }, [UpdateTable])
+    }, [user])
 
     useEffect(() => {
         const month = new Date().getMonth() + 1;
         setCurrentMonth(month);
         console.log('current month is ' + month);
     }, [])
+
+
+    useEffect(() => {
+        setLoader(true);
+        axios.get(`${apiUrl}/product/insights/monthwise`).then((res) => {
+            setProductsPerMonth(res.data)
+        }).then(() => setLoader(false));
+
+        setLoader(true);
+        axios.get(`${apiUrl}/product/insights/productByCategories`).then((res) => {
+            setProductByCategory(res.data)
+        }).then(() => setLoader(false));
+
+        setLoader(true);
+        axios.get(`${apiUrl}/product/insights/productByGender`).then((res) => {
+            setProductByGender(res.data)
+        }).then(() => setLoader(false));
+
+    }, [user, UpdateTable, currentMonth])
+
+    useEffect(() => {
+        axios.get(`${apiUrl}/categories/showCategories`).then(
+            (res) => setCategories(res.data)
+        )
+    }, [UpdateTable])
+
+
+    useEffect(() => {
+        setLoader(true);
+        axios.get(`${apiUrl}/carts/insights/${user.user_id}?month=${currentMonth}`).then(
+            res => {
+                console.log(res);
+                setInsights(res.data);
+            }
+        ).then(() => setLoader(false))
+    }, [user, UpdateTable, currentMonth])
 
     function deleteProduct(id) {
         Swal.fire({
@@ -135,7 +147,6 @@ function Dashboard() {
         formData.append('gender', gender);
         formData.append('description', description);
         formData.append('rating', rating);
-
         formData.append('seller_id', user.user_id)
 
         axios.post(`${apiUrl}/product/addProduct`, formData).then((res) => {
@@ -199,7 +210,7 @@ function Dashboard() {
             </div>
             <br></br>
             <br></br>
-
+            
             <div className="d-flex justify-content-center gap-5 m-4">
                 <div className="graph p-3" >
                     <h1 style={{ backgroundColor: '#cae9ef' }}>Products Per Month</h1>
@@ -290,49 +301,53 @@ function Dashboard() {
             </div>
             <hr></hr>
 
-            {insights.total_products && insights.total_products.length > 0 && (<div id='table-products' >
-                <table className="table-striped " style={{ backgroundColor: '', width: '100%' }}>
-                    <thead style={{ borderBottom: '3px solid aqua', backgroundColor: '#7AB2B2', color: 'white' }}>
-                        <tr className="text-center">
-                            <th>Sr.No</th>
-                            <th>Image</th>
-                            <th>Name</th>
-                            <th>Price</th>
-                            <th>Description</th>
-                            <th>Min&nbsp;Size</th>
-                            <th>Max&nbsp;Size</th>
-                            <th>Gender</th>
-                            <th>Summer Collection</th>
-                            <th>40% Off</th>
-                            <th>Delete</th>
-                            <th>View</th>
+            {
+                loader ? <LoadingSpinner /> :
+                    (insights && insights.total_products && insights.total_products.length > 0) ?
+                        (<div id='table-products' >
+                            <table className="table-striped " style={{ backgroundColor: '', width: '100%' }}>
+                                <thead style={{ borderBottom: '3px solid aqua', backgroundColor: '#7AB2B2', color: 'white' }}>
+                                    <tr className="text-center">
+                                        <th>Sr.No</th>
+                                        <th>Image</th>
+                                        <th>Name</th>
+                                        <th>Price</th>
+                                        <th>Description</th>
+                                        <th>Min&nbsp;Size</th>
+                                        <th>Max&nbsp;Size</th>
+                                        <th>Gender</th>
+                                        <th>Summer Collection</th>
+                                        <th>40% Off</th>
+                                        <th>Delete</th>
+                                        <th>View</th>
 
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {insights.total_products && insights.total_products.length > 0 && (
-                            insights.total_products.map((product, index) => (
-                                <tr key={index} style={{ borderBottom: '3px solid aqua' }}>
-                                    <td className="p-3">{index + 1}</td>
-                                    <td className="p-3"> <img src={`http://localhost:4000/uploads/${product.image}`} style={{ height: '100px', width: '100px' }} /></td>
-                                    <td className="p-3">{product.name}</td>
-                                    <td className="p-3" style={{ cursor: 'pointer' }} onClick={() => handleUpdate('enter price', product.price, 'price', product.id, 'number')} >&#8377;{product.price}</td>
-                                    <td className="p-3">{product.description.slice(0, 100)}</td>
-                                    <td className="p-3">{product.minsize}</td>
-                                    <td className="p-3">{product.maxsize}</td>
-                                    <td className="p-3" style={{ cursor: 'pointer' }} onClick={() => handleUpdate('enter price', product.gender, 'gender', product.id, 'text')}>{product.gender}</td>
-                                    <td className="p-3" style={{ cursor: 'pointer' }} onClick={() => handleUpdate('Add To Summer Collection ? yes/no', product.summer_collection, 'summer_collection', product.id, 'text')}>{product.summer_collection}</td>
-                                    <td className="p-3" style={{ cursor: 'pointer' }} onClick={() => handleUpdate('Want to give 40 % off ? yes/no', product.discount_40, 'discount_40', product.id, 'text')}>{product.discount_40}</td>
-                                    <td className="p-3"><button style={{ color: 'red', backgroundColor: '#7AB2B2', border: "1px solid white", boxShadow: '1px 2px 3px yellowgreen', borderRadius: '2px', fontWeight: '700' }} onClick={() => deleteProduct(product.id)} className="btn ">Delete</button></td>
-                                    <td><button className="btn" style={{ color: 'black', backgroundColor: '#7AB2B2', border: "1px solid white", boxShadow: '1px 2px 3px yellowgreen', borderRadius: '2px', color: 'white', fontWeight: '700' }} onClick={() => navigate(`/product/${product.id}`)}>&nbsp;View&nbsp;</button></td>
-
-
-                                </tr>
-                            ))
-                        )}
-                    </tbody>
-                </table>
-            </div>)}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {insights.total_products && insights.total_products.length > 0 && (
+                                        insights.total_products.map((product, index) => (
+                                            <tr key={index} style={{ borderBottom: '3px solid aqua' }}>
+                                                <td className="p-3">{index + 1}</td>
+                                                <td className="p-3"> <img src={`http://localhost:4000/uploads/${product.image}`} style={{ height: '100px', width: '100px' }} /></td>
+                                                <td className="p-3">{product.name}</td>
+                                                <td className="p-3" style={{ cursor: 'pointer' }} onClick={() => handleUpdate('enter price', product.price, 'price', product.id, 'number')} >&#8377;{product.price}</td>
+                                                <td className="p-3">{product.description.slice(0, 100)}</td>
+                                                <td className="p-3">{product.minsize}</td>
+                                                <td className="p-3">{product.maxsize}</td>
+                                                <td className="p-3" style={{ cursor: 'pointer' }} onClick={() => handleUpdate('enter price', product.gender, 'gender', product.id, 'text')}>{product.gender}</td>
+                                                <td className="p-3" style={{ cursor: 'pointer' }} onClick={() => handleUpdate('Add To Summer Collection ? yes/no', product.summer_collection, 'summer_collection', product.id, 'text')}>{product.summer_collection}</td>
+                                                <td className="p-3" style={{ cursor: 'pointer' }} onClick={() => handleUpdate('Want to give 40 % off ? yes/no', product.discount_40, 'discount_40', product.id, 'text')}>{product.discount_40}</td>
+                                                <td className="p-3"><button style={{ color: 'red', backgroundColor: '#7AB2B2', border: "1px solid white", boxShadow: '1px 2px 3px yellowgreen', borderRadius: '2px', fontWeight: '700' }} onClick={() => deleteProduct(product.id)} className="btn ">Delete</button></td>
+                                                <td><button className="btn" style={{ color: 'black', backgroundColor: '#7AB2B2', border: "1px solid white", boxShadow: '1px 2px 3px yellowgreen', borderRadius: '2px', color: 'white', fontWeight: '700' }} onClick={() => navigate(`/product/${product.id}`)}>&nbsp;View&nbsp;</button></td>
+                                            </tr>
+                                        ))
+                                    )
+                                    }
+                                </tbody>
+                            </table>
+                        </div>)
+                        : (<h1>No  Products available for current month</h1>)
+            }
         </div>
     )
 }

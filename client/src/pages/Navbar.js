@@ -33,7 +33,7 @@ const Navbar = () => {
         const filterArray = originalCategories.filter((cat) =>
             cat.name.toLowerCase().includes(tempinput)
         );
-        setCategories(filterArray);
+        setCategories([filterArray]);
         const filterProducts = originalProducts.filter((product) =>
             product.name.toLowerCase().includes(tempinput)
         );

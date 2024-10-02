@@ -1,8 +1,7 @@
 const express = require('express');
-const connection = require('../connection');
+const connection = require('../config/connection');
 const router = express.Router();
 router.use(express.json());
-
 
 router.get('/list/:product_id', (req, res,next) => {
     try {

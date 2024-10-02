@@ -104,9 +104,9 @@ const Payment = () => {
                 products = productIdsString
             }
             axios.put(`${apiUrl}/carts/update/${products}`).then((res) => {
-                let noOfItemPurchased = res.data.data.affectedRows;
+                // let noOfItemPurchased = res.data.data.affectedRows;
                 // setCartCount(cartCount - noOfItemPurchased); 
-                dispatch(setCartCount(cartCount - noOfItemPurchased));  //using redux
+                dispatch(setCartCount(cartCount - 1));  //using redux
                 Swal.fire({
                     title: 'Thank You  ',
                     text: `For Purchasing `,

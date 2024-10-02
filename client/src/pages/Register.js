@@ -43,7 +43,8 @@ const Register = () => {
         })
       }
     )
-  })
+  }, [])
+
   function handleUsername(value) {
     setUsername(value);
     if (users.includes(value))

@@ -6,11 +6,11 @@ app.use(cors());
 require('dotenv').config();
 
 
-const categoriesRouter=require('./routes/categories');
-const productRouter=require('./routes/products');
-const cartsRouter=require('./routes/carts');
-const usersRouter=require('./routes/users');
-const feedbackRouter=require('./routes/feedback');
+const categoriesRouter=require('./src/routes/categories');
+const productRouter=require('./src/routes/products');
+const cartsRouter=require('./src/routes/carts');
+const usersRouter=require('./src/routes/users');
+const feedbackRouter=require('./src/routes/feedback');
 
 app.use('/categories',categoriesRouter);
 app.use('/product',productRouter);

@@ -21,7 +21,7 @@ function PieChart({ data }) {
     ];
 
     return (
-        <div style={{ width: '100%', height: '100%', padding: '20px' }}>
+        data && <div style={{ width: '100%', height: '100%', padding: '20px' }}>
             <VictoryPie
                 data={chartData}
                 innerRadius={100}

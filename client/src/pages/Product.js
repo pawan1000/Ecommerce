@@ -1,9 +1,7 @@
-import React, { useContext, useEffect, useState } from 'react'
+import  {  useEffect, useState } from 'react'
+import React from 'react';
 import { useNavigate, useParams } from 'react-router-dom'
-import img1 from '../assets/img1.jpg'
 import axios from 'axios';
-import { Navigate } from 'react-router-dom';
-import { AuthContext } from '../helpers/AuthContext';
 import Swal from 'sweetalert2';
 import ProductCard from '../helpers/ProductCard';
 import Footer from '../helpers/Footer';

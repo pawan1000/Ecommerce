@@ -11,7 +11,7 @@ import { setCartCount } from "../redux/reducers/cartReducer";
 function Carts() {
     const apiUrl = process.env.REACT_APP_API_URL;
     const [items, setItems] = useState([]);
-    const [categories, setCategories] = useState([]);
+    // const [categories, setCategories] = useState([]);
     // const { authState, setAuthState, cartCount, setCartCount } = useContext(AuthContext); //used with context-api
     const user = useSelector((state) => state.user);
     const cartCount = useSelector((state) => state.cart);
@@ -121,11 +121,11 @@ function Carts() {
         )
     }, [user])
 
-    useEffect(() => {
-        axios.get(`${apiUrl}/carts/categories`).then(
-            (res) => setCategories(res.data)
-        )
-    }, [])
+    // useEffect(() => {
+    //     axios.get(`${apiUrl}/carts/categories`).then(
+    //         (res) => setCategories(res.data)
+    //     )
+    // }, [])
 
     return (
         <div>
