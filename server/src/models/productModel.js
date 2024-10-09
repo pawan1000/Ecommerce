@@ -107,6 +107,7 @@ exports.addProduct = async (product, image) => {
     try {
         const query = 'insert into products (name,category_id,price,image,seller_id,description,gender,rating) values (?,?,?,?,?,?,?,?)';
         let result = await connection.query(query, [product.name, product.category, product.price, image, product.seller_id, product.description, product.gender, product.rating]);
+        return result[0];
     }
     catch (error) {
         throw new Error(error)

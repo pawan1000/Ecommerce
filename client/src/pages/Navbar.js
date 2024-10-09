@@ -28,17 +28,7 @@ const Navbar = () => {
         document.getElementById('dropdownDiv').style.display = 'none';
     };
 
-    function handleSearchInput(e) {
-        const tempinput = e.target.value.toLowerCase();
-        const filterArray = originalCategories.filter((cat) =>
-            cat.name.toLowerCase().includes(tempinput)
-        );
-        setCategories([filterArray]);
-        const filterProducts = originalProducts.filter((product) =>
-            product.name.toLowerCase().includes(tempinput)
-        );
-        setProducts(filterProducts);
-    }
+   
 
     useEffect(() => {
         setLoading(true);
@@ -75,6 +65,18 @@ const Navbar = () => {
                 setLoading(false);
             });
     }, [user, cartCount]);
+
+    function handleSearchInput(e) {
+        const tempinput = e.target.value.toLowerCase();
+        const filterArray = originalCategories.filter((cat) =>
+            cat.name.toLowerCase().includes(tempinput)
+        );
+        setCategories(filterArray);
+        const filterProducts = originalProducts.filter((product) =>
+            product.name.toLowerCase().includes(tempinput)
+        );
+        setProducts(filterProducts);
+    }
 
     function handleLogout(e) {
         e.preventDefault();
